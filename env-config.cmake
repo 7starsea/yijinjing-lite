@@ -1,4 +1,4 @@
 
-set(BOOST_ROOT "path-to/boost" CACHE PATH "Boost Dir")
+set(BOOST_ROOT "path-to/boost/include" CACHE PATH "Boost Dir")
         
         

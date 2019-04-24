@@ -13,7 +13,7 @@
 # limitations under the License.
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.7)
-PROJECT(yijinjing)
+PROJECT(yijinjing-lite)
 
 SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
@@ -25,8 +25,9 @@ SET(Boost_USE_MULTITHREADED ON)
 SET(Boost_USE_STATIC_LIBS OFF)
 SET(Boost_USE_STATIC_RUNTIME OFF)
 
-FIND_PACKAGE(Boost 1.62.0 COMPONENTS locale date_time filesystem system thread serialization math_tr1 chrono regex program_options REQUIRED)
-INCLUDE_DIRECTORIES(${BOOST_INCLUDEDIR})
+#FIND_PACKAGE(Boost 1.57.0 COMPONENTS locale date_time filesystem system thread serialization math_tr1 chrono regex program_options REQUIRED)
+FIND_PACKAGE(Boost 1.57.0 COMPONENTS locale date_time filesystem system thread chrono regex REQUIRED)
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 
 
 

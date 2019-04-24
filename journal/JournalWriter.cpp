@@ -53,12 +53,13 @@ long JournalWriter::writeStr(const string& str)
 long JournalWriter::write_frame(const void* data, FH_TYPE_LENGTH length,  FH_TYPE_MSG_TP msgType,
                                       FH_TYPE_LASTFG lastFlag)
 {
+    long nano = getNanoTime();
+    
     void* buffer = journal->locateFrame();
     Frame frame(buffer);
     frame.setMsgType(msgType);
     frame.setLastFlag(lastFlag);
     frame.setData(data, length);
-    long nano = getNanoTime();
     frame.setNano(nano);
     frame.setStatusWritten();
     journal->passFrame();

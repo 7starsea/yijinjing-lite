@@ -2,9 +2,10 @@
 #include "PageEngine.h"
 
 
-#define KUNGFU_FOLDER "/home/aimin/snap/kungfu/"                 /**< base folder of kungfu system */
+#define KUNGFU_FOLDER "/tmp/yijinjing-lite/"                 /**< base folder of kungfu system */
 #define KUNGFU_JOURNAL_FOLDER KUNGFU_FOLDER "journal/"  /**< where we put journal files */
 
+///#define KUNGFU_JOURNAL_FOLDER "/tmp/yijinjing-lite/journal/"  /**< where we put journal files */
 
 #define TEMP_PAGE KUNGFU_JOURNAL_FOLDER "TEMP_PAGE"
 

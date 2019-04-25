@@ -1,0 +1,6 @@
+{
+    "page_engine": {
+        "log_folder"       : "/tmp/yijinjing-lite",
+        "journal_folder"   : "/tmp/yijinjing-lite/journal"
+        }
+}

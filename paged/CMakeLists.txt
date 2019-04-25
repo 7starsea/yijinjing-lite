@@ -23,6 +23,5 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} journal)
 
 
 
-add_executable(main_service main.cpp)
-TARGET_LINK_LIBRARIES(main_service paged journal)
+
 

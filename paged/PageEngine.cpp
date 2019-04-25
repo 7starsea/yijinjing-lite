@@ -22,19 +22,16 @@
 #include "journal/Timer.h"
 #include "utils/Hash.hpp"
 #include "journal/PageUtil.h"
-#include "utils/json.hpp"
 
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/sinks/stdout_sinks.h"
-
+//#include <boost/predef.h>
 #include <sstream>
 #include  <atomic>
 #include <signal.h>
 #include <boost/bind.hpp>
 
 USING_YJJ_NAMESPACE
-
-using json = nlohmann::json;
 
 
 const int INTERVAL_IN_MILLISEC = 1000000;
@@ -111,9 +108,22 @@ PageEngine::PageEngine(const string & commFileName,  const std::string & temp_pa
 
     // setup signal related static issue
  //   static_logger = logger;
+ 
     for (int s = 1; s < 32; ++s)
         signal(s, signal_callback);
 
+/**
+    signal(SIGINT, signal_callback);
+    signal(SIGTERM, signal_callback);
+    signal(SIGABRT, signal_callback);
+    //  std::signal(SIGILL, handler); 
+    //  std::signal(SIGSEGV, handler); 
+#if BOOST_OS_WINDOWS
+    signal(SIGBREAK, signal_callback);
+#else
+    signal(SIGILL, signal_callback);
+#endif
+*/
 /*    // setup basic tasks
     tasks.clear();
     add_task(PstBasePtr(new PstPidCheck(this))); // pid check is a necessary task.
@@ -441,21 +451,7 @@ void  PageEngine::exit_client(const string& clientName, int hashCode, bool needH
         spdlog::info(  "[RmClient] HASH FAILED.. (name) {} (serverHash) {} (clientHash) {}",  clientName,  info.hash_code, hashCode);
         return;
     }
-    /*
-    if (info.is_strategy)
-    {
-        int idx = info.user_index_vec[0]; // strategy must be a writer, therefore only one user
-        PageCommMsg* msg = GET_COMM_MSG(commBuffer, idx);
-        json j_request;
-        j_request["name"] = clientName;
-        j_request["folder"] = msg->folder;
-        j_request["rid_s"] = info.rid_start;
-        j_request["rid_e"] = info.rid_end;
-        j_request["pid"] = info.pid;
-        
-        write(j_request.dump(), MSG_TYPE_STRATEGY_END);
-    }
-    */
+
 
     for (auto idx: info.user_index_vec)
     {

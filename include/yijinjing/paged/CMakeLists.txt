@@ -15,13 +15,17 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.7)
 PROJECT(paged)
 
-SET(LIB_SOURCE_FILES PageEngine.h PageEngine.cpp PageSocketHandler.cpp PageSocketHandler.h PageServiceTask.cpp PageServiceTask.h )
+SET(LIB_INCLUDE_FILES PageEngine.h  PageSocketHandler.h  PageServiceTask.h )
 
-SET(LIB_FILES ${LIB_SOURCE_FILES})
-ADD_LIBRARY(${PROJECT_NAME} ${LIB_FILES})
+SET(LIB_SOURCE_FILES  PageEngine.cpp PageSocketHandler.cpp  PageServiceTask.cpp  )
+
+
+ADD_LIBRARY(${PROJECT_NAME} ${LIB_INCLUDE_FILES} ${LIB_SOURCE_FILES})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} journal)
 
 
 
 
+INSTALL(FILES ${LIB_INCLUDE_FILES} DESTINATION "include/yijinjing/paged")
 
+INSTALL(TARGETS ${PROJECT_NAME} DESTINATION "lib/")

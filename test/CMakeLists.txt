@@ -20,3 +20,5 @@ TARGET_LINK_LIBRARIES(reader paged journal)
 
 add_executable(yjj_page_service page_service.cpp)
 TARGET_LINK_LIBRARIES(yjj_page_service paged journal)
+
+INSTALL(TARGETS writer reader yjj_page_service  DESTINATION "bin/")

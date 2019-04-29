@@ -23,12 +23,8 @@ ENDIF(USE_HASH_CODE)
 
 set(source_dir ${CMAKE_CURRENT_SOURCE_DIR})
 
-SET(LIB_UTIL_INCLUDE_FILES  
-			${source_dir}/../utils/Hash.hpp 
-			${source_dir}/../utils/json.hpp 
-			)
 
-SET(LIB_INCLUDE_FILES ${source_dir}/../utils/constants.h ${source_dir}/../utils/YJJ_DECLARE.h 
+SET(LIB_INCLUDE_FILES 
 	Frame.hpp FrameHeader.h Journal.h JournalHandler.h
         JournalReader.h JournalWriter.h Page.h PageUtil.h PageHeader.h PageProvider.h  
          IJournalVisitor.h Timer.h PageCommStruct.h PageSocketStruct.h) 
@@ -46,13 +42,12 @@ SET(LIB_SOURCE_FILES Journal.cpp JournalHandler.cpp JournalReader.cpp JournalWri
 
 
 
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${LIB_SOURCE_FILES} ${LIB_INCLUDE_FILES} ${LIB_UTIL_INCLUDE_FILES} )
+ADD_LIBRARY(${PROJECT_NAME} SHARED ${LIB_SOURCE_FILES} ${LIB_INCLUDE_FILES})
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SOVERSION 1.1 VERSION 1.1)
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${Boost_LIBRARIES})
 
-INSTALL(FILES ${LIB_UTIL_INCLUDE_FILES} ${LIB_INCLUDE_FILES} DESTINATION "include")
+INSTALL(FILES ${LIB_INCLUDE_FILES} DESTINATION "include/yijinjing/journal")
 
-INSTALL(TARGETS ${PROJECT_NAME} DESTINATION "lib/yijinjing")
+INSTALL(TARGETS ${PROJECT_NAME} DESTINATION "lib/")

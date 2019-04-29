@@ -23,10 +23,7 @@
 #ifndef YIJINJING_DECLARE_H
 #define YIJINJING_DECLARE_H
 
-/** python is necessary in most situation,
- * to remove the annoying warning on _POSIX_C_SOURCE,
- * simply put it in the top position. */
-//#include <boost/python.hpp>
+
 /** we use boost shared_ptr as our smart pointer */
 #include <boost/shared_ptr.hpp>
 #include <string>
@@ -43,10 +40,6 @@ using umap = std::unordered_map<Key, T>; /** unordered_map usage, will merge mor
 
 typedef unsigned char byte;
 typedef unsigned int uint;
-//typedef std::pair<int, int> IntPair;
-
-///#define KUNGFU_SOCKET_FOLDER KUNGFU_FOLDER "socket/"    /**< where we put socket files */
-///#define KUNGFU_LOG_FOLDER KUNGFU_FOLDER "log/"          /**< where we put log files */
 
 
 #define DECLARE_PTR(X) typedef boost::shared_ptr<X> X##Ptr; /**< define smart ptr */

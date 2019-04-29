@@ -5,7 +5,6 @@ SET(LIB_INCLUDE_FILES
 	${source_dir}/Hash.hpp 
 	${source_dir}/json.hpp 
 	${source_dir}/constants.h
-	${source_dir}/sys_messages.h  
 	${source_dir}/YJJ_DECLARE.h 
 	)
 

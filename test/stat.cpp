@@ -19,12 +19,12 @@ void cpu_set_affinity(int cpu_id){
 }
 
 void Calculator::print_header() {
-	std::cout << "+--------------+--------------+--------------+--------------+-------+" << std::endl;
+	std::cout << "+-------------+--------------+--------------+--------------+-------+" << std::endl;
 	std::cout << " mean(ns)     | std(ns)      | min(ns)      | max(ns)      | valid |" << std::endl;
 	std::cout << "--------------+--------------+--------------+--------------+-------+" << std::endl;		
 	}
 void Calculator::print_footer() {
-    std::cout << "+--------------+--------------+--------------+--------------+-------+" << std::endl;		
+  std::cout << "+--------------+--------------+--------------+--------------+-------+" << std::endl;		
 	}
 
 Calculator::Calculator(): n(0), min(1000000000), max(0), sum(0), square_sum(0) {}

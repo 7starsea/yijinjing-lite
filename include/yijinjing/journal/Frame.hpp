@@ -23,12 +23,12 @@
 #ifndef YIJINJING_FRAME_HPP
 #define YIJINJING_FRAME_HPP
 
-#include "utils/YJJ_DECLARE.h"
+#include "yijinjing/utils/YJJ_DECLARE.h"
 #include "FrameHeader.h"
 #include <string.h> // memcpy
 
 #ifdef FRAME_AUTO_SET_HASHCODE
-#include "utils/Hash.hpp"
+#include "yijinjing/utils/Hash.hpp"
 #endif
 
 YJJ_NAMESPACE_START

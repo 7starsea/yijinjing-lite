@@ -23,7 +23,7 @@
 #ifndef YIJINJING_PAGEPROVIDER_H
 #define YIJINJING_PAGEPROVIDER_H
 
-#include "utils/YJJ_DECLARE.h"
+#include "yijinjing/utils/YJJ_DECLARE.h"
 //#include "IPageProvider.h"
 
 YJJ_NAMESPACE_START

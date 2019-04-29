@@ -31,7 +31,7 @@
  *       |- connect to PageEngine-service via page_provider
  */
 
-#include "utils/YJJ_DECLARE.h"
+#include "yijinjing/utils/YJJ_DECLARE.h"
 
 YJJ_NAMESPACE_START
 

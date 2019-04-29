@@ -22,8 +22,8 @@
 #ifndef YIJINJING_PAGECOMMSTRUCT_H
 #define YIJINJING_PAGECOMMSTRUCT_H
 
-#include "utils/constants.h"
-#include "utils/sys_messages.h"
+#include "yijinjing/utils/constants.h"
+#include "yijinjing/utils/sys_messages.h"
 #include <string.h>
 
 YJJ_NAMESPACE_START

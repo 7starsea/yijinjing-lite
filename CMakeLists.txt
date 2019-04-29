@@ -33,19 +33,19 @@ INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3 -Wall")
 OPTION(BUILD_SHARED_LIBS "turn OFF for .a libs" ON)
-OPTION(USE_SERVICE "use memory service" ON)
+#OPTION(USE_SERVICE "use memory service" ON)
 OPTION(USE_HASH_CODE "use hash code when writing" OFF)
-############################################################
 
 
-############################################################
-
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR})
 
-ADD_SUBDIRECTORY(journal)
-ADD_SUBDIRECTORY(paged)
+
+
+ADD_SUBDIRECTORY(include/yijinjing/journal)
+ADD_SUBDIRECTORY(include/yijinjing/paged)
+
 ADD_SUBDIRECTORY(test)

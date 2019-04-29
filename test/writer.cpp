@@ -3,10 +3,10 @@
 #include <string.h>
 #include <math.h>
 
-#include "journal/JournalWriter.h"
-#include "journal/FrameHeader.h"
-#include "journal/Timer.h"
-#include "journal/PageProvider.h"
+#include "yijinjing/journal/JournalWriter.h"
+#include "yijinjing/journal/FrameHeader.h"
+#include "yijinjing/journal/Timer.h"
+#include "yijinjing/journal/PageProvider.h"
 
 
 #include "stat.h"

@@ -22,7 +22,7 @@
 #ifndef YIJINJING_PAGESOCKETSTRUCT_H
 #define YIJINJING_PAGESOCKETSTRUCT_H
 
-#include "utils/constants.h"
+#include "yijinjing/utils/constants.h"
 
 #define PAGED_SOCKET_FILE  "/tmp/kungfu_yjj_paged.sock"
 

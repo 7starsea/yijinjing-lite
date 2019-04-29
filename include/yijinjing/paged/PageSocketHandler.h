@@ -22,12 +22,12 @@
 #ifndef YIJINJING_PAGESOCKETHANDLER_H
 #define YIJINJING_PAGESOCKETHANDLER_H
 
-#include "utils/YJJ_DECLARE.h"
+#include "yijinjing/utils/YJJ_DECLARE.h"
 ///#include "log/KfLog.h"
 #include "spdlog/spdlog.h"
 
-#include "utils/json.hpp"
-#include "journal/PageSocketStruct.h"
+#include "yijinjing/utils/json.hpp"
+#include "yijinjing/journal/PageSocketStruct.h"
 #include <boost/enable_shared_from_this.hpp>
 
 YJJ_NAMESPACE_START

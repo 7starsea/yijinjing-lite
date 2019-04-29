@@ -24,7 +24,7 @@
 #ifndef YIJINJING_PAGEENGINE_H
 #define YIJINJING_PAGEENGINE_H
 
-#include "journal/PageCommStruct.h"
+#include "yijinjing/journal/PageCommStruct.h"
 //#include "log/KfLog.h"
 #include "PageSocketHandler.h"
 #include "PageServiceTask.h"

@@ -24,7 +24,7 @@
 #ifndef YIJINJING_PAGESERVICETASK_H
 #define YIJINJING_PAGESERVICETASK_H
 
-#include "utils/YJJ_DECLARE.h"
+#include "yijinjing/utils/YJJ_DECLARE.h"
 
 YJJ_NAMESPACE_START
 

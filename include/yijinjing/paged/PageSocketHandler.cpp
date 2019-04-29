@@ -20,7 +20,7 @@
  */
 
 #include "PageSocketHandler.h"
-#include "journal/Timer.h"
+#include "yijinjing/journal/Timer.h"
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/array.hpp>

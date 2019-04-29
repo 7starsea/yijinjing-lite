@@ -4,10 +4,10 @@
 #include <string.h>
 #include <math.h>
 #include <sched.h>
-#include "journal/JournalReader.h"
-#include "journal/FrameHeader.h"
-#include "journal/Frame.hpp"
-#include "journal/Timer.h"
+#include "yijinjing/journal/JournalReader.h"
+#include "yijinjing/journal/FrameHeader.h"
+#include "yijinjing/journal/Frame.hpp"
+#include "yijinjing/journal/Timer.h"
 
 #include "stat.h"
 

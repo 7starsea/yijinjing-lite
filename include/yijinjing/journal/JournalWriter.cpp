@@ -26,7 +26,7 @@
 #include "Journal.h"
 #include "PageProvider.h"
 #include "Timer.h"
-#include "utils/sys_messages.h"
+#include "yijinjing/utils/sys_messages.h"
 ///#include <mutex> // used by JournalSafeWriter
 
 USING_YJJ_NAMESPACE

@@ -37,13 +37,11 @@ SET(LIB_SOURCE_FILES Journal.cpp JournalHandler.cpp JournalReader.cpp JournalWri
         Timer.cpp)  # JournalFinder.cpp
 
 
-IF(USE_SERVICE)
+#IF(USE_SERVICE)
     SET(LIB_SOURCE_FILES ${LIB_SOURCE_FILES} ClientPageProvider.cpp)
-
-  ##  ADD_DEFINITIONS(-DUSE_PAGED_SERVICE)
-else()
-    SET(LIB_SOURCE_FILES ${LIB_SOURCE_FILES} LocalPageProvider.cpp)
-ENDIF(USE_SERVICE)
+#else()
+#    SET(LIB_SOURCE_FILES ${LIB_SOURCE_FILES} LocalPageProvider.cpp)
+#ENDIF(USE_SERVICE)
 
 
 

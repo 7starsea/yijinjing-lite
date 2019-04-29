@@ -28,7 +28,7 @@
 
 #include "PageServiceTask.h"
 #include "PageEngine.h"
-#include "journal/PageUtil.h"
+#include "yijinjing/journal/PageUtil.h"
 //#include "journal/Timer.h"
 #ifdef ENABLE_ACTIVATION_CODE
 #include "ActivationCode.hpp"

@@ -24,7 +24,7 @@
 #ifndef YIJINJING_JOURNAL_H
 #define YIJINJING_JOURNAL_H
 
-#include "utils/YJJ_DECLARE.h"
+#include "yijinjing/utils/YJJ_DECLARE.h"
 #include "Page.h"
 #include "PageProvider.h"
 

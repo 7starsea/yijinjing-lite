@@ -20,7 +20,7 @@
 #ifndef PROJECT_IJOURNALVISITOR_H
 #define PROJECT_IJOURNALVISITOR_H
 
-#include "utils/YJJ_DECLARE.h"
+#include "yijinjing/utils/YJJ_DECLARE.h"
 
 YJJ_NAMESPACE_START
 

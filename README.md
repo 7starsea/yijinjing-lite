@@ -14,6 +14,15 @@ cmake -C ../env-config.cmake ..
 make
 ```
 
+Run && Test
+========
+run these three commands in three different terminals:
+```
+./yjj_page_service -c path-to/yijinjing-lite/test/page_engine.json
+./reader
+./writer
+```
+
 License
 ==========
 

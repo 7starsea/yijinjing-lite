@@ -23,10 +23,17 @@
 #include "PageUtil.h"
 #include "PageHeader.h"
 
+#ifdef _WINDOWS
+#include <io.h>
+#include <fcntl.h>
+#include <windows.h>
+#else
 #include <sys/mman.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#endif // _WINDOWS
+
 #include <cstdio>
 #include <sstream>
 
@@ -42,7 +49,7 @@ string PageUtil::GenPageFileName(const string &jname, short pageNum)
     filename += std::to_string(pageNum);    filename.push_back('.');
     filename += JOURNAL_SUFFIX;
     return filename;
-///    return JOURNAL_PREFIX + "." + jname + "." + std::to_string(pageNum) + "." + JOURNAL_SUFFIX;
+//    return JOURNAL_PREFIX + "." + jname + "." + std::to_string(pageNum) + "." + JOURNAL_SUFFIX;
 }
 
 string PageUtil::GenPageFullPath(const string& dir, const string& jname, short pageNum)
@@ -78,7 +85,7 @@ vector<short> PageUtil::GetPageNums(const string& dir, const string& jname)
     return res;
 }
 
-short PageUtil::GetPageNumWithTime(const string& dir, const string& jname, long time)
+short PageUtil::GetPageNumWithTime(const string& dir, const string& jname, int64_t time)
 {
     vector<short> pageNums = GetPageNums(dir, jname);
     for (int idx = pageNums.size() - 1; idx >= 0; idx--)
@@ -110,6 +117,60 @@ PageHeader PageUtil::GetPageHeader(const string &dir, const string &jname, short
 
 void* PageUtil::LoadPageBuffer(const string& path, int size, bool isWriting, bool quickMode)
 {
+    boost::filesystem::path page_path = path;
+    boost::filesystem::path page_folder_path = page_path.parent_path();
+    if(!boost::filesystem::exists(page_folder_path)) {
+        boost::filesystem::create_directories(page_folder_path);
+    }
+#ifdef _WINDOWS
+    HANDLE dumpFileDescriptor = CreateFileA(path.c_str(),
+        (isWriting) ? (GENERIC_READ | GENERIC_WRITE) : GENERIC_READ,
+        FILE_SHARE_READ | FILE_SHARE_WRITE,
+        NULL,
+        (isWriting) ? OPEN_ALWAYS : OPEN_EXISTING,
+        FILE_ATTRIBUTE_NORMAL,
+        NULL);
+
+    if (dumpFileDescriptor == NULL)
+    {
+        if (!isWriting) return nullptr;
+
+        printf("Cannot create/write the file");
+        exit(EXIT_FAILURE);
+    }
+
+
+    HANDLE fileMappingObject = CreateFileMapping(dumpFileDescriptor,
+        NULL,
+        (isWriting) ? PAGE_READWRITE:PAGE_READONLY,
+        0,
+        size,
+        NULL);
+
+    if (fileMappingObject == NULL)
+    {
+        int nRet = GetLastError();
+        printf("LoadPageBuffer fail(%s): CreateFileMapping Error = %d, %s\n", isWriting ? "writer" : "reader", nRet, path.c_str());
+        return nullptr;
+        //exit(EXIT_FAILURE);
+    }
+
+
+    void* buffer = MapViewOfFile(fileMappingObject,
+        (isWriting) ? FILE_MAP_ALL_ACCESS:FILE_MAP_READ,
+        0,
+        0,
+        size);
+
+    if (buffer == nullptr)
+    {
+        int nRet = GetLastError();
+        printf("LoadPageBuffer fail(%s): MapViewOfFile Error = %d, %s\n", isWriting ? "writer" : "reader", nRet, path.c_str());
+        return nullptr;
+    }
+
+    return buffer;
+#else
     int fd = open(path.c_str(), (isWriting) ? (O_RDWR | O_CREAT) : O_RDONLY, (mode_t)0600);
 
     if (fd < 0)
@@ -155,10 +216,14 @@ void* PageUtil::LoadPageBuffer(const string& path, int size, bool isWriting, boo
 
     close(fd);
     return buffer;
+#endif // _WINDOWS
 }
 
 void PageUtil::ReleasePageBuffer(void *buffer, int size, bool quickMode)
 {
+#ifdef _WINDOWS
+    UnmapViewOfFile(buffer);
+#else
     //unlock and unmap
     if (!quickMode && munlock(buffer, size) != 0)
     {
@@ -171,10 +236,23 @@ void PageUtil::ReleasePageBuffer(void *buffer, int size, bool quickMode)
         perror("ERROR in munmap");
         exit(EXIT_FAILURE);
     }
+#endif // _WINDOWS
 }
 
 bool PageUtil::FileExists(const string& filename)
 {
+#ifdef _WINDOWS
+    HANDLE dumpFileDescriptor = CreateFileA(filename.c_str(),
+        GENERIC_READ,
+        FILE_SHARE_READ | FILE_SHARE_WRITE,
+        NULL,
+        OPEN_EXISTING,
+        FILE_ATTRIBUTE_NORMAL,
+        NULL);
+
+    if (dumpFileDescriptor == NULL) return false;
+    else return true;
+#else
     int fd = open(filename.c_str(), O_RDONLY, (mode_t)0600);
     if (fd >= 0)
     {
@@ -182,4 +260,5 @@ bool PageUtil::FileExists(const string& filename)
         return true;
     }
     return false;
+#endif // _WINDOWS
 }

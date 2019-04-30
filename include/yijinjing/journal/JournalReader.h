@@ -63,7 +63,7 @@ public:
     /** add visitor for "startVisiting" usage  */
     bool  addVisitor(IJournalVisitor* visitor);
     /** all journals jump to start time */
-    void jumpStart(long startTime);
+    void jumpStart(int64_t startTime);
     /** expire one of the journal by index,
      * return true if expire the journal successfully */
     bool  expireJournal(size_t idx);
@@ -72,39 +72,39 @@ public:
     bool  expireJournalByName(const string& jname);
     /** seek nano-time of a journal by index,
      * return true if that journal exists and seeked successfully */
-    bool  seekTimeJournal(size_t idx, long nano);
+    bool  seekTimeJournal(size_t idx, int64_t nano);
     /** seek nano-time of a journal by journal short name,
      * return true if that journal exists and seeked successfully */
-    bool  seekTimeJournalByName(const string& jname, long nano);
+    bool  seekTimeJournalByName(const string& jname, int64_t nano);
 
 public:
     // creators
     static JournalReaderPtr create(const vector<string>& dirs,
                                    const vector<string>& jnames,
-                                   long startTime,
+                                   int64_t startTime,
                                    const string& readerName);
 
     static JournalReaderPtr create(const vector<string>& dirs,
                                    const vector<string>& jnames,
                                    const vector<IJournalVisitor*>& visitors,
-                                   long startTime,
+                                   int64_t startTime,
                                    const string& readerName);
 
     static JournalReaderPtr create(const string& dir,
                                    const string& jname,
-                                   long startTime,
+                                   int64_t startTime,
                                    const string& readerName);
 
-    static JournalReaderPtr create(long startTime,
+    static JournalReaderPtr create(int64_t startTime,
                                    const string& readerName);
 
     static JournalReaderPtr create(const vector<string>& dirs,
                                    const vector<string>& jnames,
-                                   long startTime);
+                                   int64_t startTime);
 
     static JournalReaderPtr create(const string& dir,
                                    const string& jname,
-                                   long startTime);
+                                   int64_t startTime);
 
     static const string PREFIX;
 
@@ -112,14 +112,14 @@ public:
 
 inline FramePtr JournalReader::getNextFrame()
 {
-    long  minNano = TIME_TO_LAST;
+    int64_t  minNano = TIME_TO_LAST;
     void* res_address = nullptr;
     for (JournalPtr& journal: journals)
     {
         FrameHeader* header = (FrameHeader*)(journal->locateFrame());
         if (header != nullptr)
         {
-            long nano = header->nano;
+            int64_t nano = header->nano;
             if (minNano == TIME_TO_LAST || nano < minNano)
             {
                 minNano = nano;

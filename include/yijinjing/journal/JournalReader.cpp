@@ -52,7 +52,7 @@ size_t JournalReader::addJournal(const string& dir, const string& jname)
     }
 }
 
-JournalReaderPtr JournalReader::create(const vector<string>& dirs, const vector<string>& jnames, long startTime, const string& readerClientName)
+JournalReaderPtr JournalReader::create(const vector<string>& dirs, const vector<string>& jnames, int64_t startTime, const string& readerClientName)
 {
     
     PageProviderPtr provider = PageProviderPtr(new PageProvider(readerClientName, false));
@@ -66,25 +66,25 @@ JournalReaderPtr JournalReader::create(const vector<string>& dirs, const vector<
     return jrp;
 }
 
-JournalReaderPtr JournalReader::create(long startTime, const string& readerName){
+JournalReaderPtr JournalReader::create(int64_t startTime, const string& readerName){
         vector<string> empty;
     
     return create(empty, empty, startTime, readerName);
 
 }
-JournalReaderPtr JournalReader::create(const string& dir, const string& jname, long startTime, const string& readerName)
+JournalReaderPtr JournalReader::create(const string& dir, const string& jname, int64_t startTime, const string& readerName)
 {
     vector<string> dirs = {dir};
     vector<string> jnames = {jname};
     return create(dirs, jnames, startTime, readerName);
 }
 
-JournalReaderPtr JournalReader::create(const vector<string>& dirs, const vector<string>& jnames, long startTime)
+JournalReaderPtr JournalReader::create(const vector<string>& dirs, const vector<string>& jnames, int64_t startTime)
 {
     return JournalReader::create(dirs, jnames, startTime, getDefaultName(JournalReader::PREFIX));
 }
 
-JournalReaderPtr JournalReader::create(const string& dir, const string& jname, long startTime)
+JournalReaderPtr JournalReader::create(const string& dir, const string& jname, int64_t startTime)
 {
     return JournalReader::create(dir, jname, startTime, getDefaultName(JournalReader::PREFIX));
 }
@@ -92,7 +92,7 @@ JournalReaderPtr JournalReader::create(const string& dir, const string& jname, l
 JournalReaderPtr JournalReader::create(const vector<string>& dirs,
                                        const vector<string>& jnames,
                                        const vector<IJournalVisitor*>& visitors,
-                                       long startTime,
+                                       int64_t startTime,
                                        const string& readerName)
 {
     JournalReaderPtr jrp = JournalReader::create(dirs, jnames, startTime, readerName);
@@ -101,7 +101,7 @@ JournalReaderPtr JournalReader::create(const vector<string>& dirs,
 }
 
 
-void JournalReader::jumpStart(long startTime)
+void JournalReader::jumpStart(int64_t startTime)
 {
     for (JournalPtr& journal: journals)
         journal->seekTime(startTime);
@@ -146,7 +146,7 @@ bool JournalReader::expireJournal(size_t idx)
     return false;
 }
 
-bool JournalReader::seekTimeJournal(size_t idx, long nano)
+bool JournalReader::seekTimeJournal(size_t idx, int64_t nano)
 {
     if (idx < journals.size())
     {
@@ -164,7 +164,7 @@ bool JournalReader::expireJournalByName(const string& jname)
     return expireJournal(iter->second);
 }
 
-bool JournalReader::seekTimeJournalByName(const string& jname, long nano)
+bool JournalReader::seekTimeJournalByName(const string& jname, int64_t nano)
 {
     auto iter = journalMap.find(jname);
     if (iter == journalMap.end())

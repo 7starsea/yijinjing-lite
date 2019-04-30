@@ -23,27 +23,71 @@
 #ifndef YIJINJING_TIMER_H
 #define YIJINJING_TIMER_H
 
+#ifdef _WINDOWS
+#include <ctime>
+#include <ctype.h>
+#include <string.h>
+
+//////////////////////////////////////////////////////////////////////////
+#define TM_YEAR_BASE 1900
+
+/*
+* We do not implement alternate representations. However, we always
+* check whether a given modifier is allowed for a certain conversion.
+*/
+#define ALT_E     0x01
+#define ALT_O     0x02
+#define LEGAL_ALT(x)    { if (alt_format & ~(x)) return (0); }
+
+
+int conv_num(const char **, int *, int, int);
+char * strptime(const char *buf, const char *fmt, struct tm *tm);
+
+static const char *day[7] = {
+    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+    "Friday", "Saturday"
+};
+static const char *abday[7] = {
+    "Sun","Mon","Tue","Wed","Thu","Fri","Sat"
+};
+static const char *mon[12] = {
+    "January", "February", "March", "April", "May", "June", "July",
+    "August", "September", "October", "November", "December"
+};
+static const char *abmon[12] = {
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+};
+static const char *am_pm[2] = {
+    "AM", "PM"
+};
+
+
+
+//////////////////////////////////////////////////////////////////////////
+#endif // _WINDOWS
+
 #include "yijinjing/utils/YJJ_DECLARE.h"
 
 YJJ_NAMESPACE_START
 
-const long MILLISECONDS_PER_SECOND = 1000;
-const long MICROSECONDS_PER_MILLISECOND = 1000;
-const long NANOSECONDS_PER_MICROSECOND = 1000;
+const int64_t MILLISECONDS_PER_SECOND = 1000;
+const int64_t MICROSECONDS_PER_MILLISECOND = 1000;
+const int64_t NANOSECONDS_PER_MICROSECOND = 1000;
 
-const long MICROSECONDS_PER_SECOND = MICROSECONDS_PER_MILLISECOND * MILLISECONDS_PER_SECOND;
-const long NANOSECONDS_PER_MILLISECOND = NANOSECONDS_PER_MICROSECOND * MICROSECONDS_PER_MILLISECOND;
-const long NANOSECONDS_PER_SECOND = NANOSECONDS_PER_MILLISECOND * MILLISECONDS_PER_SECOND;
+const int64_t MICROSECONDS_PER_SECOND = MICROSECONDS_PER_MILLISECOND * MILLISECONDS_PER_SECOND;
+const int64_t NANOSECONDS_PER_MILLISECOND = NANOSECONDS_PER_MICROSECOND * MICROSECONDS_PER_MILLISECOND;
+const int64_t NANOSECONDS_PER_SECOND = NANOSECONDS_PER_MILLISECOND * MILLISECONDS_PER_SECOND;
 
 const int  SECONDS_PER_MINUTE = 60;
 const int  MINUTES_PER_HOUR = 60;
 const int  HOURS_PER_DAY = 24;
 const int  SECONDS_PER_HOUR = SECONDS_PER_MINUTE * MINUTES_PER_HOUR;
 
-const long MILLISECONDS_PER_MINUTE = MILLISECONDS_PER_SECOND * SECONDS_PER_MINUTE;
-const long NANOSECONDS_PER_MINUTE = NANOSECONDS_PER_SECOND * SECONDS_PER_MINUTE;
-const long NANOSECONDS_PER_HOUR = NANOSECONDS_PER_SECOND * SECONDS_PER_HOUR;
-const long NANOSECONDS_PER_DAY = NANOSECONDS_PER_HOUR * HOURS_PER_DAY;
+const int64_t MILLISECONDS_PER_MINUTE = MILLISECONDS_PER_SECOND * SECONDS_PER_MINUTE;
+const int64_t NANOSECONDS_PER_MINUTE = NANOSECONDS_PER_SECOND * SECONDS_PER_MINUTE;
+const int64_t NANOSECONDS_PER_HOUR = NANOSECONDS_PER_SECOND * SECONDS_PER_HOUR;
+const int64_t NANOSECONDS_PER_DAY = NANOSECONDS_PER_HOUR * HOURS_PER_DAY;
 
 /**
  * timer for nanosecond, main class
@@ -52,9 +96,9 @@ class NanoTimer
 {
 public:
     /** return current nano time: unix-timestamp * 1e9 + nano-part */
-    long   getNano() const;
+    int64_t   getNano() const;
     /** return secDiff */
-    inline long getSecDiff() const { return secDiff; }
+    inline int64_t getSecDiff() const { return secDiff; }
     /** singleton */
     static NanoTimer* getInstance();
 
@@ -63,23 +107,23 @@ private:
     /** singleton */
     static std::shared_ptr<NanoTimer> m_ptr;
     /** object to be updated every time called */
-    long secDiff;
+    int64_t secDiff;
 };
 
 /**
  * util function to utilize NanoTimer
- * @return current nano time in long (unix-timestamp * 1e9 + nano-part)
+ * @return current nano time in int64_t (unix-timestamp * 1e9 + nano-part)
  */
-inline long getNanoTime()
+inline int64_t getNanoTime()
 {
     return NanoTimer::getInstance()->getNano();
 }
 
 /**
  * util function to utilize NanoTimer
- * @return second diff in long for nano time matching
+ * @return second diff in int64_t for nano time matching
  */
-inline long getSecDiff()
+inline int64_t getSecDiff()
 {
     return NanoTimer::getInstance()->getSecDiff();
 }
@@ -87,20 +131,25 @@ inline long getSecDiff()
 /**
  * parse struct tm to nano time
  * @param _tm ctime struct
- * @return nano time in long
+ * @return nano time in int64_t
  */
-inline long parseTm(struct tm _tm)
+inline int64_t parseTm(struct tm _tm)
 {
+#ifdef _WINDOWS
+    return mktime(&_tm) * NANOSECONDS_PER_SECOND;
+#else
     return timelocal(&_tm) * NANOSECONDS_PER_SECOND;
+#endif // _WINDOWS    
+    ///return timelocal(&_tm) * NANOSECONDS_PER_SECOND;
 }
 
 /**
  * parse string time to nano time
  * @param timeStr string-formatted time
  * @param format eg: %Y%m%d-%H:%M:%S
- * @return nano time in long
+ * @return nano time in int64_t
  */
-inline long parseTime(const char* timeStr, const char* format)
+inline int64_t parseTime(const char* timeStr, const char* format)
 {
     struct tm _tm;
     strptime(timeStr, format, &_tm);
@@ -108,12 +157,12 @@ inline long parseTime(const char* timeStr, const char* format)
 }
 
 /**
- * dump long time to string with format
- * @param nano nano time in long
+ * dump int64_t time to string with format
+ * @param nano nano time in int64_t
  * @param format eg: %Y%m%d-%H:%M:%S
  * @return string-formatted time
  */
-inline string parseNano(long nano, const char* format)
+inline string parseNano(int64_t nano, const char* format)
 {
     if (nano <= 0)
         return string("NULL");
@@ -126,11 +175,11 @@ inline string parseNano(long nano, const char* format)
 }
 
 /**
- * dump long time to struct tm
- * @param nano nano time in long
+ * dump int64_t time to struct tm
+ * @param nano nano time in int64_t
  * @return ctime struct
  */
-inline struct tm parseNano(long nano)
+inline struct tm parseNano(int64_t nano)
 {
     time_t sec_num = nano / NANOSECONDS_PER_SECOND;
     return *localtime(&sec_num);

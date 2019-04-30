@@ -79,7 +79,7 @@ public:
     /** pass all wrote frame */
     void passWrittenFrame();
     /** pass frame to nano_time */
-    void passToTime(long time);
+    void passToTime(int64_t time);
 
 public:
     /** load page, should be called by PageProvider
@@ -105,7 +105,7 @@ inline void Page::passWrittenFrame()
         passFrame();
 }
 
-inline void Page::passToTime(long time)
+inline void Page::passToTime(int64_t time)
 {
     while (getCurStatus() == JOURNAL_FRAME_STATUS_WRITTEN && frame.getNano() < time)
         passFrame();

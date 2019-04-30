@@ -34,8 +34,16 @@ USING_YJJ_NAMESPACE
 using namespace boost::asio;
 
 std::array<char, SOCKET_MESSAGE_MAX_LENGTH> _data;
+
+#ifdef _WINDOWS
+std::shared_ptr<ip::tcp::acceptor> _acceptor;
+std::shared_ptr<ip::tcp::socket> _socket;
+#else
 std::shared_ptr<boost::asio::local::stream_protocol::acceptor> _acceptor;
 std::shared_ptr<local::stream_protocol::socket> _socket;
+#endif // _WINDOWS
+
+
 std::shared_ptr<io_service> _io;
 std::shared_ptr<PageSocketHandler> PageSocketHandler::m_ptr = std::shared_ptr<PageSocketHandler>(nullptr);
 
@@ -56,8 +64,27 @@ void PageSocketHandler::run(IPageSocketUtil* _util)
     util = _util;
     logger = util->get_logger();
     _io.reset(new io_service());
+
+/*
+    boost::filesystem::path socket_path = PAGED_SOCKET_FILE;
+    boost::filesystem::path socket_folder_path = socket_path.parent_path();
+    if(!boost::filesystem::exists(socket_folder_path)) {
+        boost::filesystem::create_directories(socket_folder_path);
+    }
+    */
+
+#ifdef _WINDOWS
+    _acceptor.reset(new ip::tcp::acceptor(*_io));
+    boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::tcp::v4(), PAGED_SOCKET_PORT);
+    _acceptor->open(endpoint.protocol());
+    _acceptor->set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
+    _acceptor->bind(endpoint);
+    _acceptor->listen();
+    _socket.reset(new ip::tcp::socket(*_io));
+#else
     _acceptor.reset(new local::stream_protocol::acceptor(*_io, local::stream_protocol::endpoint(PAGED_SOCKET_FILE)));
     _socket.reset(new local::stream_protocol::socket(*_io));
+#endif // _WINDOWS
 
     _acceptor->async_accept(*_socket, std::bind(&PageSocketHandler::handle_accept, this));
     io_running = true;
@@ -86,7 +113,13 @@ void PageSocketHandler::handle_accept()
     util->acquire_mutex();
     process_msg();
     util->release_mutex();
+
+#ifdef _WINDOWS
+    _socket.reset(new ip::tcp::socket(*_io));
+#else
     _socket.reset(new local::stream_protocol::socket(*_io));
+#endif // _WINDOWS
+//    _socket.reset(new local::stream_protocol::socket(*_io));
     _acceptor->async_accept(*_socket, std::bind(&PageSocketHandler::handle_accept, this));
 }
 

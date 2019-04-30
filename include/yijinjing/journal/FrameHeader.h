@@ -35,7 +35,7 @@ YJJ_NAMESPACE_START
 // data types of all fields in frame header
 // which need to be fully controlled for data length.
 typedef byte    FH_TYPE_STATUS;
-typedef long    FH_TYPE_NANOTM;
+typedef int64_t    FH_TYPE_NANOTM;
 typedef int     FH_TYPE_LENGTH;
 typedef uint    FH_TYPE_HASHNM;
 typedef short   FH_TYPE_MSG_TP;
@@ -68,7 +68,14 @@ struct FrameHeader
     FH_TYPE_MSG_TP      msg_type;
     /** JournalFrameLastFlag */
     FH_TYPE_LASTFG      last_flag;
+
+#ifndef _WIN32
 } __attribute__((packed));
+#else
+};
+#pragma pack(pop)
+#endif    
+
 
 /** length of frame header */
 const FH_TYPE_LENGTH BASIC_FRAME_HEADER_LENGTH = sizeof(FrameHeader);

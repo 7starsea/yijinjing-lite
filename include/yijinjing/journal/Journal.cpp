@@ -38,7 +38,7 @@ JournalPtr Journal::create(const string &dir, const string &jname, int serviceId
     return jp;
 }
 
-void Journal::seekTime(long time)
+void Journal::seekTime(int64_t time)
 {
     // before seek to time, should release current page first
     if (curPage.get() != nullptr)

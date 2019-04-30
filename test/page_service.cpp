@@ -1,7 +1,7 @@
 
 ///#include <iostream>
 #include <boost/filesystem.hpp>
-#include "CLI11.hpp"
+//#include "CLI11.hpp"
 #include "spdlog/fmt/fmt.h"
 #include "yijinjing/paged/PageEngine.h"
 #include "yijinjing/utils/json.hpp"
@@ -22,39 +22,43 @@ bool ensure_dir_exists(const std::string & path){
 
 int main(int argc, char** argv){
 
-    std::string filename = "page_engine.json";
-
-	CLI::App app{"Page engine service"};
-    app.add_option("-c,--conf", filename, "Page engine service configuration json file, default: page_engine.json");
-
-    CLI11_PARSE(app, argc, argv);
-
-	if(!boost::filesystem::exists(filename)){
-		fmt::print(">>> Page engine configuration file {} does not exist!\n", filename);
-		return -1;
-	}
-
-	std::ifstream ifs(filename);
-	nlohmann::json conf;
-	ifs >> conf;
-	ifs.close();
-
 	std::string log_folder, journal_folder;
 	int freq = 1;
-	try{
-		nlohmann::json page_engine_j = conf["page_engine"];
-		log_folder = page_engine_j["log_folder"].get<std::string>();
-		journal_folder = page_engine_j["journal_folder"].get<std::string>();
-		
-		if (page_engine_j.find("frequency") != page_engine_j.end()) {
-		  freq = page_engine_j["frequency"].get<int>();
-		  if(freq <= 0) freq = 1;
+	{
+	    std::string filename = "page_engine.json";
+		if (argc > 1){
+			filename = argv[1];
 		}
-	}catch(...) {
-		fmt::print(">>> The json file {} must contain {'page_engine': dict(log_folder='', journal_folder='')}.\n");
-		return -1;
+
+	//	CLI::App app{"Page engine service"};
+	//  app.add_option("-c,--conf", filename, "Page engine service configuration json file, default: page_engine.json");
+	//  CLI11_PARSE(app, argc, argv);
+
+		if(!boost::filesystem::exists(filename)){
+			fmt::print(">>> Page engine configuration file {} does not exist!\n", filename);
+			return -1;
+		}
+
+		std::ifstream ifs(filename);
+		nlohmann::json conf_j;
+		ifs >> conf_j;
+		ifs.close();
+
+		
+		try{
+			nlohmann::json page_engine_j = conf_j["page_engine"];
+			log_folder = page_engine_j["log_folder"].get<std::string>();
+			journal_folder = page_engine_j["journal_folder"].get<std::string>();
+			
+			if (page_engine_j.find("frequency") != page_engine_j.end()) {
+				freq = page_engine_j["frequency"].get<int>();
+				if(freq <= 0) freq = 1;
+			}
+		}catch(...) {
+			fmt::print(">>> The json file {} must contain {'page_engine': dict(log_folder='', journal_folder='')}.\n");
+			return -1;
+		}
 	}
-	
 
 	fmt::print(">>> PageEngine will run with log_folder {}, journal_folder {}, and frequency {}.\n", log_folder, journal_folder, freq);
 	if(log_folder.size() > 0 && journal_folder.size() > 0 

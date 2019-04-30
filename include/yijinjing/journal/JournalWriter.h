@@ -52,19 +52,19 @@ public:
      * no modification of existing frames is allowed. */
     void seekEnd();
     /** to write a string into journal */
-    long write_str(const string& str, FH_TYPE_MSG_TP msgType);
+    int64_t write_str(const string& str, FH_TYPE_MSG_TP msgType);
 
     /** write a frame with full information */
-    long write_frame(const void* data, FH_TYPE_LENGTH length,
+    int64_t write_frame(const void* data, FH_TYPE_LENGTH length,
                                    FH_TYPE_MSG_TP msgType,
                                   FH_TYPE_LASTFG lastFlag);
 
     template<typename T>
-    inline long write_data(const T * data, FH_TYPE_MSG_TP msgType, FH_TYPE_LASTFG lastFlag){
+    inline int64_t write_data(const T * data, FH_TYPE_MSG_TP msgType, FH_TYPE_LASTFG lastFlag){
         return write_frame(data, sizeof(T), msgType, lastFlag);
     }
     template<typename T>
-    inline long write_data(const T & data, FH_TYPE_MSG_TP msgType, FH_TYPE_LASTFG lastFlag){
+    inline int64_t write_data(const T & data, FH_TYPE_MSG_TP msgType, FH_TYPE_LASTFG lastFlag){
         return write_frame(&data, sizeof(T), msgType, lastFlag);
     }
     
@@ -78,22 +78,6 @@ public:
 public:
     static const string PREFIX;
 };
-
-//
-//class JournalSafeWriter: public JournalWriter
-//{
-//protected:
-//    JournalSafeWriter(PageProviderPtr ptr): JournalWriter(ptr) {}
-//
-//public:
-//    /** write a frame with full information */
-//    virtual long write_frame(const void* data, FH_TYPE_LENGTH length,
-//                                  FH_TYPE_MSG_TP msgType,
-//                                  FH_TYPE_LASTFG lastFlag);
-//
-//    // create a thread safe writer (with mutex in write_frame)
-//    static JournalWriterPtr create(const string& dir, const string& jname, const string& writerName);
-//};
 
 
 YJJ_NAMESPACE_END

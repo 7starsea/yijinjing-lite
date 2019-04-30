@@ -28,11 +28,11 @@ void Calculator::print_footer() {
 	}
 
 Calculator::Calculator(): n(0), min(1000000000), max(0), sum(0), square_sum(0) {}
-void Calculator::update(long d)
+void Calculator::update(int64_t d)
 {
     ++n;
     sum += d;
-    square_sum += (long)d*d;
+    square_sum += (int64_t)d*d;
     ///min = (min < 0) ? d : ((d < min) ? d : min);
 //        min = (d < min) ? d : min;
 //        max = (d > max) ? d : max;

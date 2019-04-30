@@ -45,15 +45,15 @@ short JournalWriter::getPageNum() const
     return journal->getCurPageNum();
 }
 
-long JournalWriter::write_str(const string& str, FH_TYPE_MSG_TP msgType)
+int64_t JournalWriter::write_str(const string& str, FH_TYPE_MSG_TP msgType)
 {
     return write_frame(str.c_str(), str.length() + 1, msgType, 1);
 }
 
-long JournalWriter::write_frame(const void* data, FH_TYPE_LENGTH length,  FH_TYPE_MSG_TP msgType,
+int64_t JournalWriter::write_frame(const void* data, FH_TYPE_LENGTH length,  FH_TYPE_MSG_TP msgType,
                                       FH_TYPE_LASTFG lastFlag)
 {
-    long nano = getNanoTime();
+    int64_t nano = getNanoTime();
     
     void* buffer = journal->locateFrame();
     Frame frame(buffer);

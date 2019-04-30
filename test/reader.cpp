@@ -44,11 +44,11 @@ int main(){
             {
                 short msg_type = frame->getMsgType();            
                 void* data = frame->getData();
-                long long msg_time = frame->getNano();
+                int64_t msg_time = frame->getNano();
                 int len = frame->getDataLength();
 
                 if(msg_type == 11){
-                    long long cur_time = getNanoTime();
+                    int64_t cur_time = getNanoTime();
                     
                     cal.update(cur_time - msg_time);
                     ++count;

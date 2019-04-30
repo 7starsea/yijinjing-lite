@@ -39,8 +39,15 @@ void getSocketRsp(SocketMArray &input, SocketMArray &output)
 {
     using namespace boost::asio;
     io_service io_service;
+
+#ifdef _WINDOWS
+    ip::tcp::socket socket(io_service);
+    socket.connect(ip::tcp::endpoint(ip::address_v4::from_string("127.0.0.1"),PAGED_SOCKET_PORT));
+#else
     local::stream_protocol::socket socket(io_service);
     socket.connect(local::stream_protocol::endpoint(PAGED_SOCKET_FILE));
+#endif // _WINDOWS
+
     boost::system::error_code error;
     write(socket, buffer(input), error);
     socket.read_some(buffer(output), error);
@@ -55,9 +62,8 @@ void getSocketRspOnReq(PagedSocketRequest& req, SocketMArray& data, const string
     getSocketRsp(reqBuf, data);
 }
 
-PageProvider::PageProvider(const string& clientName, bool isWriting, bool reviseAllowed):
-is_writer(isWriting),revise_allowed(is_writer || reviseAllowed)
-, client_name(clientName), comm_buffer(nullptr), hash_code(0)
+PageProvider::PageProvider(const string& clientName, bool isWriting):
+is_writer(isWriting), client_name(clientName), comm_buffer(nullptr), hash_code(0)
 {
     register_client();
 }
@@ -66,7 +72,13 @@ void PageProvider::register_client()
 {
     PagedSocketRequest req = {};
     req.type = is_writer ? PAGED_SOCKET_WRITER_REGISTER : PAGED_SOCKET_READER_REGISTER;
+
+#ifdef _WINDOWS
+    req.pid = _getpid();
+#else
     req.pid = getpid();
+#endif    
+
     SocketMArray rspArray;
     getSocketRspOnReq(req, rspArray, client_name);
     PagedSocketRspClient* rsp = (PagedSocketRspClient*)(&rspArray[0]);
@@ -131,7 +143,7 @@ PagePtr PageProvider::getPage(const string &dir, const string &jname, int servic
         else
             return PagePtr();
     }
-    return Page::load(dir, jname, pageNum, revise_allowed, true);
+    return Page::load(dir, jname, pageNum, is_writer, true);
 }
 
 void PageProvider::releasePage(void* buffer, int size, int serviceIdx)

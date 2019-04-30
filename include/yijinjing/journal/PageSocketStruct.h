@@ -25,6 +25,7 @@
 #include "yijinjing/utils/constants.h"
 
 #define PAGED_SOCKET_FILE  "/tmp/kungfu_yjj_paged.sock"
+#define PAGED_SOCKET_PORT 10086
 
 YJJ_NAMESPACE_START
 
@@ -62,7 +63,13 @@ struct PagedSocketRequest
     int     hash_code;
     /** source id (only take effect when login trade engine) */
     short   source;
+
+#ifndef _WIN32
 } __attribute__((packed));
+#else
+};
+#pragma pack(pop)
+#endif
 
 struct PagedSocketResponse
 {
@@ -72,7 +79,13 @@ struct PagedSocketResponse
     bool    success;
     /** error message if failure '\0' if success. */
     char    error_msg[SOCKET_ERROR_MAX_LENGTH];
+
+#ifndef _WIN32
 } __attribute__((packed));
+#else
+};
+#pragma pack(pop)
+#endif
 
 struct PagedSocketRspClient: public PagedSocketResponse
 {

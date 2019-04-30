@@ -49,8 +49,8 @@ int main(int argc, char *argv[]){
         
         int count = 4000;
         for(int i = 0; i < count; ++i){
-            long long nano = writer_->write_frame(data, len, 11, 0);
-            long long cur_time = getNanoTime() - nano;
+            int64_t nano = writer_->write_frame(data, len, 11, 0);
+            int64_t cur_time = getNanoTime() - nano;
             
             cal.update(cur_time);
             

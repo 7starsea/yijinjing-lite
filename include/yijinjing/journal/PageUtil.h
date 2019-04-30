@@ -60,7 +60,7 @@ public:
     /** extract page number from file name */
     static short  ExtractPageNum(const string& filename, const string& jname);
     /** select page number from existing pages in directory which contains the nano time */
-    static short  GetPageNumWithTime(const string& dir, const string& jname, long time);
+    static short  GetPageNumWithTime(const string& dir, const string& jname, int64_t time);
     /** get existing page numbers in directory with jname */
     static vector<short> GetPageNums(const string& dir, const string& jname);
 

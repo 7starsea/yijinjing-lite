@@ -24,52 +24,12 @@
 #define YIJINJING_PAGEPROVIDER_H
 
 #include "yijinjing/utils/YJJ_DECLARE.h"
-//#include "IPageProvider.h"
 
 YJJ_NAMESPACE_START
 
-///**
-// * PageProvider,
-// * abstract class with virtual interfaces,
-// * utilized by JournalHandler
-// */
-//class PageProvider: public IPageProvider
-//{
-//protected:
-//    /** true if provider is used by a JournalWriter */
-//    bool    is_writer;
-//    /** true if it is allowed to revise */
-//    bool    revise_allowed;
-//public:
-//    /** register journal when added into JournalHandler */
-//    virtual int  register_journal(const string& dir, const string& jname) { return -1; };
-//    /** exit client after JournalHandler is released */
-//    virtual void exit_client() {};
-//    /** override IPageProvider */
-//    virtual bool isWriter() const {return is_writer; };
-//};
-//
-//DECLARE_PTR(PageProvider);
-//
-///**
-// * LocalPageProvider,
-// * provide local page, no need to connect with service.
-// */
-//class LocalPageProvider: public PageProvider
-//{
-//public:
-//    
-//public:
-//    /** constructor */
-//    LocalPageProvider(bool isWriting, bool reviseAllowed=false);
-//    /** override IPageProvider */
-//    virtual PagePtr getPage(const string &dir, const string &jname, int serviceIdx, short pageNum);
-//    /** override IPageProvider */
-//    virtual void releasePage(void* buffer, int size, int serviceIdx);
-//};
 
 /**
- * ClientPageProvider,
+ * PageProvider,
  * provide page via memory service, socket & comm
  */
 
@@ -80,8 +40,6 @@ class PageProvider
 protected:
     /** true if provider is used by a JournalWriter */
     const bool    is_writer;
-    /** true if it is allowed to revise */
-    const bool    revise_allowed;
 
     const string  client_name;
     void*   comm_buffer;
@@ -95,7 +53,7 @@ protected:
     void register_client();
 public:
     /** default constructor with client name and writing flag */
-    PageProvider(const string& clientName, bool isWriting, bool reviseAllowed=false);
+    PageProvider(const string& clientName, bool isWriting);
     
     /** register journal when added into JournalHandler */
     int  register_journal(const string& dir, const string& jname);

@@ -64,7 +64,7 @@ public:
     /** expire this journal, won't get any frame until reset by seekTime */
     void    expire();
     /** seek to time in nanoseconds-timestamp */
-    void    seekTime(long time);
+    void    seekTime(int64_t time);
     /** get frame address return nullptr if no available */
     void*   locateFrame();
     /** move forward to next frame */

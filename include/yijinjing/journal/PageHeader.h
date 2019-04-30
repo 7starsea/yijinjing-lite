@@ -28,7 +28,7 @@
 
 YJJ_NAMESPACE_START
 
-/** reserve space for page header (long) */
+/** reserve space for page header (int64_t) */
 #define PAGE_HEADER_RESERVE 10
 //////////////////////////////////////////
 /// (byte) JournalPageStatus
@@ -45,9 +45,9 @@ struct PageHeader
     /** number of this page in journal */
     short   page_num;
     /** nano time of when the page started */
-    long    start_nano;
+    int64_t    start_nano;
     /** nano time of when the page closed */
-    long    close_nano;
+    int64_t    close_nano;
     /** how many frame in this page (only filled when closed) */
     int     frame_num;
     /** pos of last frame */
@@ -56,8 +56,16 @@ struct PageHeader
     short   frame_version;
     /** reserve space */
     short   reserve_short[3];
-    long    reserve_long[PAGE_HEADER_RESERVE - 1];
+    int64_t    reserve_long[PAGE_HEADER_RESERVE - 1];
+
+
+#ifndef _WIN32
 } __attribute__((packed));
+#else
+};
+#pragma pack(pop)
+#endif
+
 
 enum PageStatus
 {

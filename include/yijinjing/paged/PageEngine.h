@@ -52,7 +52,7 @@ struct PageClientInfo
     /** the index of each user linked by this client */
     vector<int> user_index_vec;
     /** register nano time */
-    long  reg_nano;
+    int64_t  reg_nano;
     /** process id */
     int   pid;
     /** hash code for the client */

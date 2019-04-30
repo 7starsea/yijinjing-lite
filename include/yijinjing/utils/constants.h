@@ -33,8 +33,8 @@ const uint HASH_SEED = 97;
 #define JOURNAL_FOLDER_MAX_LENGTH       100
 
 /** seed of hash function */
-const long TIME_FROM_FIRST = 0;
-const long TIME_TO_LAST = -1;
+const int64_t TIME_FROM_FIRST = 0;
+const int64_t TIME_TO_LAST = -1;
 
 /** size related */
 const int KB = 1024;

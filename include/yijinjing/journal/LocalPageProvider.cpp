@@ -30,30 +30,17 @@ USING_YJJ_NAMESPACE
 
 
 
-PageProvider::PageProvider(const string& clientName, bool isWriting, bool reviseAllowed):
-        client_name(clientName), comm_buffer(nullptr)
-{
-    is_writer = isWriting;
-    revise_allowed = is_writer || reviseAllowed;
-    register_client();
-}
 
-void PageProvider::register_client()
-{
-   
-}
+void PageProvider::register_client(){  }
 
-void PageProvider::exit_client()
-{}
+void PageProvider::exit_client(){}
+
 int  PageProvider::register_journal(const string& dir, const string& jname) { return -1; };
 
 
 
-
-
-
-PageProvider::PageProvider(const string& clientName, bool isWriting, bool reviseAllowed):
-is_writer(isWriting),revise_allowed(is_writer || reviseAllowed)
+PageProvider::PageProvider(const string& clientName, bool isWriting):
+is_writer(isWriting)
 , client_name(clientName), comm_buffer(nullptr), hash_code(0)
 {
   //  is_writer = isWriting;

@@ -29,7 +29,8 @@
 #include <sstream>
 #include  <atomic>
 #include <signal.h>
-#include <boost/bind.hpp>
+//#include <boost/bind.hpp>
+#include <functional>
 
 USING_YJJ_NAMESPACE
 
@@ -154,9 +155,9 @@ void PageEngine::start()
     memset(commBuffer, 0, COMM_SIZE);
     // step 1: start commBuffer checking thread
     comm_running = false;
-    commThread = ThreadPtr(new std::thread(boost::bind(&PageEngine::start_comm, this)));
+    commThread = ThreadPtr(new std::thread(std::bind(&PageEngine::start_comm, this)));
     // step 2: start socket listening
-    socketThread = ThreadPtr(new std::thread(boost::bind(&PageEngine::start_socket, this)));
+    socketThread = ThreadPtr(new std::thread(std::bind(&PageEngine::start_socket, this)));
     // make sure buffer / socket are running
     while (!(PageSocketHandler::getInstance()->is_running() && comm_running))
     {

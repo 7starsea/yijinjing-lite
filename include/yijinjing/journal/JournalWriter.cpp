@@ -45,9 +45,9 @@ short JournalWriter::getPageNum() const
     return journal->getCurPageNum();
 }
 
-long JournalWriter::writeStr(const string& str)
+long JournalWriter::write_str(const string& str, FH_TYPE_MSG_TP msgType)
 {
-    return write_frame(str.c_str(), str.length() + 1, YJJ_INTERNAL_MSG_TYPE_STRING, 1);
+    return write_frame(str.c_str(), str.length() + 1, msgType, 1);
 }
 
 long JournalWriter::write_frame(const void* data, FH_TYPE_LENGTH length,  FH_TYPE_MSG_TP msgType,

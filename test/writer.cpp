@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string.h>
 #include <math.h>
-
+#include <unistd.h>
 #include "yijinjing/journal/JournalWriter.h"
 #include "yijinjing/journal/FrameHeader.h"
 #include "yijinjing/journal/Timer.h"

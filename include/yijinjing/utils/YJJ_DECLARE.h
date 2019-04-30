@@ -25,7 +25,7 @@
 
 
 /** we use boost shared_ptr as our smart pointer */
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <string>
 #include <vector>
 #include <map>
@@ -42,7 +42,7 @@ typedef unsigned char byte;
 typedef unsigned int uint;
 
 
-#define DECLARE_PTR(X) typedef boost::shared_ptr<X> X##Ptr; /**< define smart ptr */
+#define DECLARE_PTR(X) typedef std::shared_ptr<X> X##Ptr; /**< define smart ptr */
 #define FORWARD_DECLARE_PTR(X) class X; DECLARE_PTR(X)      /**< forward defile smart ptr */
 #define YJJ_NAMESPACE_START  namespace yijinjing { /**< start of yjj namespace */
 #define YJJ_NAMESPACE_END };                               /**< end of yjj namespace */

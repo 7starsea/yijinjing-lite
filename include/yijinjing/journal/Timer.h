@@ -61,7 +61,7 @@ public:
 private:
     NanoTimer();
     /** singleton */
-    static boost::shared_ptr<NanoTimer> m_ptr;
+    static std::shared_ptr<NanoTimer> m_ptr;
     /** object to be updated every time called */
     long secDiff;
 };

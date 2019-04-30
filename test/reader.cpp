@@ -4,6 +4,7 @@
 #include <string.h>
 #include <math.h>
 #include <sched.h>
+#include <unistd.h>
 #include "yijinjing/journal/JournalReader.h"
 #include "yijinjing/journal/FrameHeader.h"
 #include "yijinjing/journal/Frame.hpp"

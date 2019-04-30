@@ -20,22 +20,24 @@
  */
 
 #include "PageSocketHandler.h"
+
 #include "yijinjing/journal/Timer.h"
 #include <boost/asio.hpp>
-#include <boost/bind.hpp>
-#include <boost/array.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/thread/mutex.hpp>
+///#include <boost/bind.hpp>
+#include <functional>
+#include <array>
+///#include <boost/make_shared.hpp>
+///#include <boost/thread/mutex.hpp>
 
 USING_YJJ_NAMESPACE
 
 using namespace boost::asio;
 
-boost::array<char, SOCKET_MESSAGE_MAX_LENGTH> _data;
-boost::shared_ptr<boost::asio::local::stream_protocol::acceptor> _acceptor;
-boost::shared_ptr<local::stream_protocol::socket> _socket;
-boost::shared_ptr<io_service> _io;
-boost::shared_ptr<PageSocketHandler> PageSocketHandler::m_ptr = boost::shared_ptr<PageSocketHandler>(nullptr);
+std::array<char, SOCKET_MESSAGE_MAX_LENGTH> _data;
+std::shared_ptr<boost::asio::local::stream_protocol::acceptor> _acceptor;
+std::shared_ptr<local::stream_protocol::socket> _socket;
+std::shared_ptr<io_service> _io;
+std::shared_ptr<PageSocketHandler> PageSocketHandler::m_ptr = std::shared_ptr<PageSocketHandler>(nullptr);
 
 PageSocketHandler::PageSocketHandler(): io_running(false)
 {}
@@ -44,7 +46,7 @@ PageSocketHandler* PageSocketHandler::getInstance()
 {
     if (m_ptr.get() == nullptr)
     {
-        m_ptr = boost::shared_ptr<PageSocketHandler>(new PageSocketHandler());
+        m_ptr = std::shared_ptr<PageSocketHandler>(new PageSocketHandler());
     }
     return m_ptr.get();
 }
@@ -57,7 +59,7 @@ void PageSocketHandler::run(IPageSocketUtil* _util)
     _acceptor.reset(new local::stream_protocol::acceptor(*_io, local::stream_protocol::endpoint(PAGED_SOCKET_FILE)));
     _socket.reset(new local::stream_protocol::socket(*_io));
 
-    _acceptor->async_accept(*_socket, boost::bind(&PageSocketHandler::handle_accept, this));
+    _acceptor->async_accept(*_socket, std::bind(&PageSocketHandler::handle_accept, this));
     io_running = true;
     _io->run();
 }
@@ -85,7 +87,7 @@ void PageSocketHandler::handle_accept()
     process_msg();
     util->release_mutex();
     _socket.reset(new local::stream_protocol::socket(*_io));
-    _acceptor->async_accept(*_socket, boost::bind(&PageSocketHandler::handle_accept, this));
+    _acceptor->async_accept(*_socket, std::bind(&PageSocketHandler::handle_accept, this));
 }
 
 void PageSocketHandler::process_msg()

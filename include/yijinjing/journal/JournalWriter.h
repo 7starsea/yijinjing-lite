@@ -52,13 +52,21 @@ public:
      * no modification of existing frames is allowed. */
     void seekEnd();
     /** to write a string into journal */
-    long writeStr(const string& str);
+    long write_str(const string& str, FH_TYPE_MSG_TP msgType);
 
     /** write a frame with full information */
     long write_frame(const void* data, FH_TYPE_LENGTH length,
                                    FH_TYPE_MSG_TP msgType,
                                   FH_TYPE_LASTFG lastFlag);
 
+    template<typename T>
+    inline long write_data(const T * data, FH_TYPE_MSG_TP msgType, FH_TYPE_LASTFG lastFlag){
+        return write_frame(data, sizeof(T), msgType, lastFlag);
+    }
+    template<typename T>
+    inline long write_data(const T & data, FH_TYPE_MSG_TP msgType, FH_TYPE_LASTFG lastFlag){
+        return write_frame(&data, sizeof(T), msgType, lastFlag);
+    }
     
   
 public:

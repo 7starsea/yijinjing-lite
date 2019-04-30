@@ -30,9 +30,9 @@
 #include "PageEngine.h"
 #include "yijinjing/journal/PageUtil.h"
 //#include "journal/Timer.h"
-#ifdef ENABLE_ACTIVATION_CODE
-#include "ActivationCode.hpp"
-#endif
+//#ifdef ENABLE_ACTIVATION_CODE
+//#include "ActivationCode.hpp"
+//#endif
 
 USING_YJJ_NAMESPACE
 

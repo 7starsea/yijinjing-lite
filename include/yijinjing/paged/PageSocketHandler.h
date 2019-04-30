@@ -22,13 +22,14 @@
 #ifndef YIJINJING_PAGESOCKETHANDLER_H
 #define YIJINJING_PAGESOCKETHANDLER_H
 
+#include <memory>
 #include "yijinjing/utils/YJJ_DECLARE.h"
 ///#include "log/KfLog.h"
 #include "spdlog/spdlog.h"
 
 #include "yijinjing/utils/json.hpp"
 #include "yijinjing/journal/PageSocketStruct.h"
-#include <boost/enable_shared_from_this.hpp>
+///#include <boost/enable_shared_from_this.hpp>
 
 YJJ_NAMESPACE_START
 
@@ -53,7 +54,7 @@ public:
 };
 
 /** socket handler for page engine */
-class PageSocketHandler: public boost::enable_shared_from_this<PageSocketHandler>
+class PageSocketHandler: public std::enable_shared_from_this<PageSocketHandler>
 {
 private:
     /** flag for io running */
@@ -63,7 +64,7 @@ private:
     /** util as page engine */
     IPageSocketUtil* util;
     /** singleton */
-    static boost::shared_ptr<PageSocketHandler> m_ptr;
+    static std::shared_ptr<PageSocketHandler> m_ptr;
 private:
     /** callback when accept new msg*/
     void handle_accept();

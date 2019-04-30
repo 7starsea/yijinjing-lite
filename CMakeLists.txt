@@ -26,7 +26,7 @@ SET(Boost_USE_STATIC_LIBS OFF)
 SET(Boost_USE_STATIC_RUNTIME OFF)
 
 #FIND_PACKAGE(Boost 1.57.0 COMPONENTS locale date_time filesystem system thread serialization math_tr1 chrono regex program_options REQUIRED)
-FIND_PACKAGE(Boost 1.57.0 COMPONENTS locale date_time filesystem system thread chrono regex REQUIRED)
+FIND_PACKAGE(Boost 1.57.0 COMPONENTS  filesystem system thread regex REQUIRED)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 
 

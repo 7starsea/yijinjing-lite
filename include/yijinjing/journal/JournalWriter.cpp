@@ -27,7 +27,7 @@
 #include "PageProvider.h"
 #include "Timer.h"
 #include "yijinjing/utils/constants.h"
-///#include <mutex> // used by JournalSafeWriter
+
 
 USING_YJJ_NAMESPACE
 
@@ -73,7 +73,7 @@ JournalWriterPtr JournalWriter::create(const string& dir, const string& jname, c
     return JournalWriter::create(dir, jname, provider);
 }
 
-JournalWriterPtr JournalWriter::create(const string& dir, const string& jname, PageProviderPtr provider)
+JournalWriterPtr JournalWriter::create(const string& dir, const string& jname, PageProviderPtr & provider)
 {
     JournalWriterPtr jwp = JournalWriterPtr(new JournalWriter(provider));
     jwp->init(dir, jname);
@@ -91,19 +91,3 @@ void JournalWriter::seekEnd()
     journal->locateFrame();
 }
 
-//std::mutex safe_writer_mtx;
-//
-//long JournalSafeWriter::write_frame(const void* data, FH_TYPE_LENGTH length,  FH_TYPE_MSG_TP msgType,
-//                                         FH_TYPE_LASTFG lastFlag)
-//{
-//    std::lock_guard<std::mutex> lck (safe_writer_mtx);
-//    return this->JournalWriter::write_frame(data, length, msgType, lastFlag);
-//}
-//
-//JournalWriterPtr JournalSafeWriter::create(const string& dir, const string& jname, const string& writerName)
-//{
-//    PageProviderPtr provider = PageProviderPtr(new ClientPageProvider(writerName, true));
-//    JournalWriterPtr jwp = JournalWriterPtr(new JournalSafeWriter(provider));
-//    jwp->init(dir, jname);
-//    return jwp;
-//}

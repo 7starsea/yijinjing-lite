@@ -40,7 +40,7 @@ protected:
     /** the journal will write in */
     JournalPtr journal;
     /** private constructor */
-    JournalWriter(PageProviderPtr ptr): JournalHandler(ptr) {}
+    JournalWriter(PageProviderPtr & ptr): JournalHandler(ptr) {}
 
 public:
     /** init journal */
@@ -72,7 +72,7 @@ public:
 public:
     // creators
     static JournalWriterPtr create(const string& dir, const string& jname, const string& writerName);
-    static JournalWriterPtr create(const string& dir, const string& jname, PageProviderPtr ptr);
+    static JournalWriterPtr create(const string& dir, const string& jname, PageProviderPtr & ptr);
     static JournalWriterPtr create(const string& dir, const string& jname);
 
 public:

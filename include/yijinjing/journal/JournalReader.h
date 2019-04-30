@@ -47,7 +47,7 @@ private:
     /** map from journal short name to its idx */
     map<string, size_t> journalMap;
     /** private constructor */
-    JournalReader(PageProviderPtr ptr);
+    JournalReader(PageProviderPtr & ptr);
 
 public:
     /** [usage]: next frame, and process the frame */

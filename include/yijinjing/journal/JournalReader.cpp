@@ -33,7 +33,7 @@ USING_YJJ_NAMESPACE
 
 const string JournalReader::PREFIX = "reader";
 
-JournalReader::JournalReader(PageProviderPtr ptr): JournalHandler(ptr)
+JournalReader::JournalReader(PageProviderPtr & ptr): JournalHandler(ptr)
 {
     journalMap.clear();
 }

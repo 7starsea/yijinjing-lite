@@ -25,8 +25,9 @@
 #include "PageSocketStruct.h"
 #include "PageProvider.h"
 #include <chrono>
+#include <array>
 #include <boost/asio.hpp>
-#include <boost/array.hpp>
+
 
 USING_YJJ_NAMESPACE
 
@@ -57,7 +58,7 @@ inline std::chrono::steady_clock::time_point get_time_now()
 inline long get_socket_diff()
 {
     using namespace boost::asio;
-    boost::array<char, SOCKET_MESSAGE_MAX_LENGTH> input, output;
+    std::array<char, SOCKET_MESSAGE_MAX_LENGTH> input, output;
     io_service io_service;
     local::stream_protocol::socket socket(io_service);
     socket.connect(local::stream_protocol::endpoint(PAGED_SOCKET_FILE));

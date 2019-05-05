@@ -31,7 +31,7 @@
 
 USING_YJJ_NAMESPACE
 
-const string JournalWriter::PREFIX = "writer";
+///const string JournalWriter::PREFIX = "writer";
 
 void JournalWriter::init(const string& dir, const string& jname)
 {
@@ -69,7 +69,6 @@ int64_t JournalWriter::write_frame(const void* data, FH_TYPE_LENGTH length,  FH_
 JournalWriterPtr JournalWriter::create(const string& dir, const string& jname, const string& writerName)
 {
     PageProviderPtr provider = PageProviderPtr(new PageProvider(writerName, true));
-
     return JournalWriter::create(dir, jname, provider);
 }
 
@@ -80,10 +79,6 @@ JournalWriterPtr JournalWriter::create(const string& dir, const string& jname, P
     return jwp;
 }
 
-JournalWriterPtr JournalWriter::create(const string& dir, const string& jname)
-{
-    return JournalWriter::create(dir, jname, getDefaultName(JournalWriter::PREFIX));
-}
 
 void JournalWriter::seekEnd()
 {

@@ -59,7 +59,7 @@ private:
 
 public:
     /** the only entrance of creating a Journal */
-    static JournalPtr create(const string& dir, const string& jname, int serviceIdx, PageProviderPtr provider);
+    static JournalPtr create(const string& dir, const string& jname, int serviceIdx, PageProviderPtr & provider);
 
     /** expire this journal, won't get any frame until reset by seekTime */
     void    expire();

@@ -27,7 +27,7 @@
 
 USING_YJJ_NAMESPACE
 
-JournalPtr Journal::create(const string &dir, const string &jname, int serviceIdx, PageProviderPtr provider)
+JournalPtr Journal::create(const string &dir, const string &jname, int serviceIdx, PageProviderPtr & provider)
 {
     JournalPtr jp = JournalPtr(new Journal());
     jp->pageProvider = provider;
@@ -46,14 +46,14 @@ void Journal::seekTime(int64_t time)
 
     if (time == TIME_TO_LAST)
     {
-        vector<short> pageNums = PageUtil::GetPageNums(directory, shortName);
+        const vector<short> pageNums = PageUtil::GetPageNums(directory, shortName);
         curPage = pageProvider->getPage(directory, shortName, serviceIdx, (pageNums.size() > 0) ? pageNums.back() : 1);
         if (curPage.get() != nullptr)
             curPage->passWrittenFrame();
     }
     else if (time == TIME_FROM_FIRST)
     {
-        vector<short> pageNums = PageUtil::GetPageNums(directory, shortName);
+        const vector<short> pageNums = PageUtil::GetPageNums(directory, shortName);
         curPage = pageProvider->getPage(directory, shortName, serviceIdx, (pageNums.size() > 0) ? pageNums.front() : 1);
     }
     else

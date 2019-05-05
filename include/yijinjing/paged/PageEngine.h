@@ -72,7 +72,6 @@ struct PageClientInfo
 class PageEngine: public IPageSocketUtil
 {
     friend class PstPidCheck;
-//    friend class PstTimeTick;
     friend class PstTempPage;
 private:
     // internal data structures. be careful on its thread-safety
@@ -80,6 +79,7 @@ private:
     map<string, PageClientInfo> clientJournals;
     /** map: pid -> client */
     map<int, vector<string> > pidClient;
+
     /** map: file attached with number of writers */
     map<PageCommMsg, int> fileWriterCounts;
     /** map: file attached with number of readers */
@@ -87,7 +87,7 @@ private:
     /** map: file to its page buffer */
     map<string, void*> fileAddrs;
     /** map: task name to task body */
-//    map<string, PstBasePtr> tasks;
+    map<string, PstBasePtr> tasks;
 
 public:
     /** default constructor */
@@ -105,11 +105,11 @@ public:
     /** set task frequency in seconds, default 1 second */
     void set_freq(double second_interval);
     /** return true if this task is inserted the first time, false if exits and updated */
-//    bool add_task(PstBasePtr task);
+    bool add_task(const PstBasePtr & task);
     /** return true if exits and removed */
-//    bool remove_task(PstBasePtr task);
+    bool remove_task(const PstBasePtr & task);
     /** return true if exits and removed */
-//    bool remove_task_by_name(string taskName);
+    bool remove_task_by_name(const string & taskName);
 
 public:
     // functions required by IPageSocketUtil
@@ -129,7 +129,6 @@ private:
     int     microsecFreq;  /**< task frequency in microseconds */
     volatile bool    comm_running;  /**< comm buffer checking thread is running */
 
-    PstBasePtr task_pidcheck;
     PstTempPagePtr task_temppage;
     std::mutex paged_mtx;
 

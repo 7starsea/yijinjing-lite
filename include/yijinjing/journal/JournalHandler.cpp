@@ -30,12 +30,14 @@ USING_YJJ_NAMESPACE
 
 #define REDIS_DIRECT_USAGE
 
+/**
 string JournalHandler::getDefaultName(const string& prefix)
 {
     std::stringstream ss;
     ss << prefix << "_" << getNanoTime();
     return ss.str();
 }
+*/
 
 size_t JournalHandler::addJournal(const string& _dir, const string& jname)
 {

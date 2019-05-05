@@ -98,15 +98,7 @@ public:
     static JournalReaderPtr create(int64_t startTime,
                                    const string& readerName);
 
-    static JournalReaderPtr create(const vector<string>& dirs,
-                                   const vector<string>& jnames,
-                                   int64_t startTime);
-
-    static JournalReaderPtr create(const string& dir,
-                                   const string& jname,
-                                   int64_t startTime);
-
-    static const string PREFIX;
+///    static const string PREFIX;
 
 };
 

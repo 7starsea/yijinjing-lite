@@ -85,7 +85,12 @@ struct PageCommMsg
                                                : (strcmp(name, p.name) != 0) ? strcmp(name, p.name) < 0
                                                                              : page_num < p.page_num;
     }
+#ifndef _WIN32
 } __attribute__((packed));
+#else
+};
+#pragma pack(pop)
+#endif    
 
 /** max number of communication users in the same time */
 #define MAX_COMM_USER_NUMBER 1000

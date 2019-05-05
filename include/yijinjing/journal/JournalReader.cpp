@@ -31,7 +31,7 @@
 
 USING_YJJ_NAMESPACE
 
-const string JournalReader::PREFIX = "reader";
+///const string JournalReader::PREFIX = "reader";
 
 JournalReader::JournalReader(PageProviderPtr & ptr): JournalHandler(ptr)
 {
@@ -67,8 +67,7 @@ JournalReaderPtr JournalReader::create(const vector<string>& dirs, const vector<
 }
 
 JournalReaderPtr JournalReader::create(int64_t startTime, const string& readerName){
-        vector<string> empty;
-    
+    vector<string> empty;
     return create(empty, empty, startTime, readerName);
 
 }
@@ -79,15 +78,6 @@ JournalReaderPtr JournalReader::create(const string& dir, const string& jname, i
     return create(dirs, jnames, startTime, readerName);
 }
 
-JournalReaderPtr JournalReader::create(const vector<string>& dirs, const vector<string>& jnames, int64_t startTime)
-{
-    return JournalReader::create(dirs, jnames, startTime, getDefaultName(JournalReader::PREFIX));
-}
-
-JournalReaderPtr JournalReader::create(const string& dir, const string& jname, int64_t startTime)
-{
-    return JournalReader::create(dir, jname, startTime, getDefaultName(JournalReader::PREFIX));
-}
 
 JournalReaderPtr JournalReader::create(const vector<string>& dirs,
                                        const vector<string>& jnames,

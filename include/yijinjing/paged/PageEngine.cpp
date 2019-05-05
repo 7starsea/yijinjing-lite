@@ -25,11 +25,9 @@
 
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/sinks/stdout_sinks.h"
-//#include <boost/predef.h>
 #include <sstream>
 #include  <atomic>
 #include <signal.h>
-//#include <boost/bind.hpp>
 #include <functional>
 
 USING_YJJ_NAMESPACE
@@ -55,8 +53,6 @@ std::shared_ptr<spdlog::logger> get_console_logger(const std::string & path, con
         auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename);
         file_sink->set_level(spdlog::level::trace);
         sinks.push_back(file_sink);
-
-        ///     console_logger = std::make_shared<spdlog::logger>(logger_name, std::begin(sinks), std::end(sinks));
 
         console_logger = std::make_shared<spdlog::logger>(logger_name, std::begin(sinks), std::end(sinks));
 
@@ -101,7 +97,6 @@ PageEngine::PageEngine(const string & commFileName,  const std::string & temp_pa
     commBuffer(nullptr), commFile(commFileName),  maxIdx(0),
                           microsecFreq(INTERVAL_IN_MILLISEC),
                           comm_running(false)
-                          , task_pidcheck(new PstPidCheck(this))
                           , task_temppage(new PstTempPage(this, temp_page_file))
 {
     // setup logger
@@ -125,14 +120,11 @@ PageEngine::PageEngine(const string & commFileName,  const std::string & temp_pa
     signal(SIGILL, signal_callback);
 #endif
 */
-/*    // setup basic tasks
+    // setup basic tasks
     tasks.clear();
     add_task(PstBasePtr(new PstPidCheck(this))); // pid check is a necessary task.
-
+    add_task(task_temppage); // temppage is a necessary task
     
-    add_task(PstTempPagePtr (new PstTempPage(this, temp_page_file)));
-    */
-
 
     getNanoTime();      /// for initialize NanoTimer instance;
 
@@ -210,23 +202,19 @@ void PageEngine::start_task()
     spdlog::info( "(startTasks) (microseconds) {}" , microsecFreq);
     while (is_task_running.load(std::memory_order_relaxed))
     {
-        acquire_mutex();
-        task_pidcheck->go();
-        task_temppage->go();
-        /*
+        acquire_mutex();        
         for (auto item: tasks)
         {
             item.second->go();
         }
-        */
         release_mutex();
         usleep(microsecFreq);
     }
     spdlog::info( "(stopTask) done");
     stop_all();
 }
-/*
-bool PageEngine::add_task(PstBasePtr task)
+
+bool PageEngine::add_task(const PstBasePtr & task)
 {
     acquire_mutex();
     string name = task->getName();
@@ -237,25 +225,28 @@ bool PageEngine::add_task(PstBasePtr task)
     return !exits;
 }
 
-bool PageEngine::remove_task(PstBasePtr task)
+bool PageEngine::remove_task(const PstBasePtr & task)
 {
-    string name = task->getName();
-    acquire_mutex();
-    bool ret = remove_task_by_name(name);
-    release_mutex();
-    return ret;
+    const string name = task->getName();
+    return remove_task_by_name(name);    
 }
 
-bool PageEngine::remove_task_by_name(string taskName)
+bool PageEngine::remove_task_by_name(const string & taskName)
 {
+    bool flag = false;
+    acquire_mutex();
     auto task_iter = tasks.find(taskName);
-    if (task_iter == tasks.end())
-        return false;
-    tasks.erase(task_iter);
-    spdlog::info( "(rmTask) (name) {}", taskName);
-    return true;
+    if (task_iter == tasks.end()){
+        tasks.erase(task_iter);
+        flag = true;
+    }
+    release_mutex();
+    if(flag){
+        spdlog::info( "(rmTask) (name) {}", taskName);
+    }
+    return flag;
 }
- */
+ 
 void PageEngine::start_socket()
 {
     PageSocketHandler::getInstance()->run(this);
@@ -377,7 +368,6 @@ void PageEngine::release_page(const PageCommMsg& msg)
 
 byte PageEngine::initiate_page(const PageCommMsg& msg)
 {
-///    spdlog::info(, "[InPage] (folder)" << msg.folder << " (jname)" << msg.name << " (pNum)" << msg.page_num << " (lpNum)" << msg.last_page_num << " (writer?)" << msg.is_writer);
     spdlog::info("[InPage] (folder) {} (jname) {} (pNum) {} (lpNum) {}",  msg.folder,  msg.name,  msg.page_num, msg.last_page_num);
 
     string path = PageUtil::GenPageFullPath(msg.folder, msg.name, msg.page_num);

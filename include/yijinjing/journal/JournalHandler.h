@@ -56,8 +56,6 @@ public:
     virtual ~JournalHandler();
     /** return the journal's index in the vector */
     virtual size_t addJournal(const string& dir, const string& jname);
-    /** default name */
-    static string getDefaultName(const string& prefix);
 };
 
 YJJ_NAMESPACE_END

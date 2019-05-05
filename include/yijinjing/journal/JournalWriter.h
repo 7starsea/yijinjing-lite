@@ -73,10 +73,9 @@ public:
     // creators
     static JournalWriterPtr create(const string& dir, const string& jname, const string& writerName);
     static JournalWriterPtr create(const string& dir, const string& jname, PageProviderPtr & ptr);
-    static JournalWriterPtr create(const string& dir, const string& jname);
 
 public:
-    static const string PREFIX;
+//    static const string PREFIX;
 };
 
 

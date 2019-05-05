@@ -142,17 +142,17 @@ inline FH_TYPE_LASTFG Frame::getLastFlag() const
 
 inline FH_TYPE_LENGTH Frame::getDataLength() const
 {
-    return getFrameLength() - getHeaderLength();
+    return getFrameLength() - BASIC_FRAME_HEADER_LENGTH;
 }
 
 inline void* Frame::getData() const
 {
-    return ADDRESS_ADD(frame, getHeaderLength());
+    return ADDRESS_ADD(frame, BASIC_FRAME_HEADER_LENGTH);
 }
 
 inline string Frame::getStr() const
 {
-    return string((char*)getData());
+    return string((char*)getData(), getDataLength());
 }
 
 inline void Frame::setStatus(FH_TYPE_STATUS status)

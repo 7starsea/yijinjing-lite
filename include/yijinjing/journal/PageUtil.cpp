@@ -54,9 +54,13 @@ string PageUtil::GenPageFileName(const string &jname, short pageNum)
 
 string PageUtil::GenPageFullPath(const string& dir, const string& jname, short pageNum)
 {
-    std::stringstream ss;
-    ss << dir << "/" << GenPageFileName(jname, pageNum);
-    return ss.str();
+//    std::stringstream ss;
+//    ss << dir << "/" << GenPageFileName(jname, pageNum);
+//    return ss.str();
+
+    string filename(dir); filename.push_back('/');
+    filename += GenPageFileName(jname, pageNum);
+    return filename;
 }
 
 string PageUtil::GetPageFileNamePattern(const string &jname)

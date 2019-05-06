@@ -40,7 +40,7 @@ void Page::finishPage()
 
 PagePtr Page::load(const string &dir, const string &jname, short pageNum, bool isWriting, bool quickMode)
 {
-    string path = PageUtil::GenPageFullPath(dir, jname, pageNum);
+    const string path = PageUtil::GenPageFullPath(dir, jname, pageNum);
     void* buffer = PageUtil::LoadPageBuffer(path, JOURNAL_PAGE_SIZE, isWriting, quickMode /*from local then we need to do mlock manually*/);
     if (buffer == nullptr)
         return PagePtr();

@@ -166,10 +166,10 @@ inline string parseNano(int64_t nano, const char* format)
 {
     if (nano <= 0)
         return string("NULL");
-    nano /= NANOSECONDS_PER_SECOND;
+    time_t seconds = nano / NANOSECONDS_PER_SECOND;
     struct tm * dt;
     char buffer [30];
-    dt = localtime(&nano);
+    dt = localtime((const time_t *)&seconds);
     strftime(buffer, sizeof(buffer), format, dt);
     return string(buffer);
 }

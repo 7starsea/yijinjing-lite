@@ -48,15 +48,18 @@ int main(int argc, char *argv[]){
         Calculator cal;
         
         int count = 4000;
-        for(int i = 0; i < count; ++i){
+        for(int j = 0; j < count; ++j){
             int64_t nano = writer_->write_frame(data, len, 11, 0);
-            int64_t cur_time = getNanoTime() - nano;
             
-            cal.update(cur_time);
-            
-            usleep(1);
-        }
+            for(int i = 0; i < 1000; ++i){
+                writer_->write_frame(data, len, 11, 0);
+            }
+            writer_->write_frame(data, len, 11, 1);
 
+            int64_t cur_time = getNanoTime() - nano;
+            cal.update(cur_time);
+            usleep(10);
+        }
         cal.print();
         ++k;
         usleep(yijinjing::MICROSECONDS_PER_SECOND);

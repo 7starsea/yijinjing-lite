@@ -21,37 +21,60 @@
  * here we define tasks which can be implemented in page engine
  */
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sstream>
+
 #include <unistd.h>
 
 #include "PageServiceTask.h"
 #include "PageEngine.h"
 #include "yijinjing/journal/PageUtil.h"
-//#include "journal/Timer.h"
-//#ifdef ENABLE_ACTIVATION_CODE
-//#include "ActivationCode.hpp"
-//#endif
+
+
+#ifdef _WINDOWS
+#include <windows.h>
+#include <Processthreadsapi.h>
+#elif defined __APPLE__
+#include <libproc.h>
+#elif defined __linux__
+#include <sstream>
+#endif
 
 USING_YJJ_NAMESPACE
-
 
 PstPidCheck::PstPidCheck(PageEngine *pe): engine(pe) {}
 
 void PstPidCheck::go()
 {
+    int pid;
+#ifdef __APPLE__
+    struct proc_taskallinfo ti;
+    int nb;
+#endif
     vector<string> clientsToRemove;
     {
         for (auto const &item: engine->pidClient)
         {
+            pid = item.first;
+#ifdef _WINDOWS
+            HANDLE process = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
+            DWORD exitCode = 0;
+            if (GetExitCodeProcess(process, &exitCode) == FALSE)
+            {
+                SPDLOG_CRITICAL("pid check failed {}", pid);
+            }
+            if (exitCode != STILL_ACTIVE)
+#elif defined __APPLE__
+            nb = proc_pidinfo(pid, PROC_PIDTASKALLINFO, 0, &ti, sizeof(ti));
+            if (nb == 0)
+#elif defined __linux__
             struct stat sts;
             std::stringstream ss;
-            ss << "/proc/" << item.first;
+            ss << "/proc/" << pid;
             if (stat(ss.str().c_str(), &sts) == -1 && errno == ENOENT)
+#endif
             {
                 for (auto const &name: item.second)
                 {
+                    SPDLOG_WARN("process {} with pid {} exited", name, pid);
                     clientsToRemove.push_back(name);
                 }
             }

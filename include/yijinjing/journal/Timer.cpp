@@ -368,6 +368,7 @@ NanoTimer* NanoTimer::getInstance()
 
 inline std::chrono::steady_clock::time_point get_time_now()
 {
+#if defined __linux__
     timespec tp;
     clock_gettime(CLOCK_MONOTONIC, &tp);
     return std::chrono::steady_clock::time_point(
@@ -375,6 +376,9 @@ inline std::chrono::steady_clock::time_point get_time_now()
                     std::chrono::seconds(tp.tv_sec) + std::chrono::nanoseconds(tp.tv_nsec)
             )
     );
+#else
+    return std::chrono::steady_clock::now();
+#endif    
 }
 
 inline int64_t get_socket_diff()

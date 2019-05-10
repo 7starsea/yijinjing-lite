@@ -1,5 +1,6 @@
 
 ///#include <iostream>
+#include <fstream>
 #include <boost/filesystem.hpp>
 //#include "CLI11.hpp"
 #include "spdlog/fmt/fmt.h"
@@ -39,7 +40,7 @@ int main(int argc, char** argv){
 			return -1;
 		}
 
-		std::ifstream ifs(filename);
+		std::ifstream ifs(filename.c_str());
 		nlohmann::json conf_j;
 		ifs >> conf_j;
 		ifs.close();

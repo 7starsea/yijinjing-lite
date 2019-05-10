@@ -46,8 +46,10 @@ int main(){
                 void* data = frame->getData();
                 int64_t msg_time = frame->getNano();
                 int len = frame->getDataLength();
+                byte last_flag = frame->getLastFlag();
 
                 if(msg_type == 11){
+                    
                     int64_t cur_time = getNanoTime();
                     
                     cal.update(cur_time - msg_time);

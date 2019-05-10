@@ -27,7 +27,7 @@
 
 YJJ_NAMESPACE_START
 
-class PageHeader;
+struct PageHeader;
 /**
  * PageUtil is more likely a namespace for utility functions
  * more details are provided for each function

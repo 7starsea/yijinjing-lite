@@ -1,12 +1,15 @@
 
 #include "stat.h"
 #include <math.h>
+#if defined __linux__  
 #include <sched.h>
+#endif
 #include <iostream>
 #include <stdio.h>
 
 
 void cpu_set_affinity(int cpu_id){
+#if defined __linux__  
     cpu_set_t mask;
     CPU_ZERO(&mask);
     CPU_SET(cpu_id, &mask);
@@ -16,6 +19,7 @@ void cpu_set_affinity(int cpu_id){
     else{
         std::cout<<"set cpu affinity success, cpu_id " << cpu_id << std::endl;
     }
+#endif    
 }
 
 void Calculator::print_header() {

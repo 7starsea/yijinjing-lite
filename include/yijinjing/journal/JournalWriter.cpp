@@ -45,6 +45,7 @@ short JournalWriter::getPageNum() const
     return journal->getCurPageNum();
 }
 
+
 int64_t JournalWriter::write_str(const string& str, FH_TYPE_MSG_TP msgType)
 {
     return write_frame(str.c_str(), str.length() + 1, msgType, 1);
@@ -64,6 +65,26 @@ int64_t JournalWriter::write_frame(const void* data, FH_TYPE_LENGTH length,  FH_
     frame.setStatusWritten();
     journal->passFrame();
     return nano;
+}
+
+Frame JournalWriter::locateFrame(){
+    FH_TYPE_NANOTM nano = getNanoTime();
+    
+    void* buffer = journal->locateFrame();
+    Frame frame(buffer);
+    frame.setNano(nano);
+    return frame;
+}
+
+void JournalWriter::passFrame(Frame &frame, FH_TYPE_LENGTH length,  FH_TYPE_MSG_TP msgType,
+                                      FH_TYPE_LASTFG lastFlag){
+
+    frame.setMsgType(msgType);
+    frame.setLastFlag(lastFlag);
+    frame.setDataLength(length);
+    frame.setStatusWritten();
+
+    journal->passFrame();
 }
 
 JournalWriterPtr JournalWriter::create(const string& dir, const string& jname, const string& writerName)

@@ -71,6 +71,8 @@ public:
     void setLastFlag(FH_TYPE_LASTFG);
     /** set data with length */
     void setData(const void*, size_t);
+    /** set data  length */
+    void setDataLength(size_t);
     /** mark status as written */
     void setStatusWritten();
     /** mark status as page closed */
@@ -192,6 +194,13 @@ inline void Frame::setData(const void* data, size_t dataLength)
     setFrameLength(BASIC_FRAME_HEADER_LENGTH + dataLength);
 #ifdef FRAME_AUTO_SET_HASHCODE
     setHashCode(MurmurHash2(data, dataLength, HASH_SEED));
+#endif
+}
+
+inline void Frame::setDataLength(size_t dataLength){
+    setFrameLength(BASIC_FRAME_HEADER_LENGTH + dataLength);
+#ifdef FRAME_AUTO_SET_HASHCODE
+    setHashCode(MurmurHash2(getData(), dataLength, HASH_SEED));
 #endif
 }
 

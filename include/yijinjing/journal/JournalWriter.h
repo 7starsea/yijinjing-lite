@@ -26,7 +26,8 @@
 #define YIJINJING_JOURNALWRITER_H
 
 #include "JournalHandler.h"
-#include "FrameHeader.h"
+//#include "FrameHeader.h"
+#include "Frame.hpp"
 
 YJJ_NAMESPACE_START
 
@@ -68,6 +69,11 @@ public:
         return write_frame(&data, sizeof(T), msgType, lastFlag);
     }
     
+    /*data is copied to frame from elsewhere (may avoid double copy where preparing data)*/
+    /** get next writable frame address */
+    Frame   locateFrame();
+    /** move forward to next frame */
+    void    passFrame(Frame &frame, FH_TYPE_LENGTH length,  FH_TYPE_MSG_TP msgType, FH_TYPE_LASTFG lastFlag);
   
 public:
     // creators
@@ -77,6 +83,7 @@ public:
 public:
 //    static const string PREFIX;
 };
+
 
 
 YJJ_NAMESPACE_END

@@ -89,7 +89,7 @@ bool cpu_set_affinity(int cpu_id){
     cpu_set_t mask;
     CPU_ZERO(&mask);
     CPU_SET(cpu_id, &mask);
-    return sched_setaffinity(0, sizeof(mask), &mask) < 0; 
+    return 0 == sched_setaffinity(0, sizeof(mask), &mask); 
 #else
     return false;    
 #endif    

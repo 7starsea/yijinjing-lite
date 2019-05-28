@@ -98,7 +98,7 @@ public:
     virtual ~PageEngine();
 
     /** start paged service, mainly start tasks */
-    void start();
+    void start(int cpu_id);
     /** sync stop paged service */
     void stop();
 
@@ -140,7 +140,7 @@ private:
 private:
     // several threading to run:
     // 1. check communicate memory (main, need efficiency)
-    void start_comm();
+    void start_comm(int cpu_id);
     // 2. socket listening
     void start_socket();
     // 3. run all tasks

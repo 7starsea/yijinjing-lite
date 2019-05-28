@@ -1,14 +1,47 @@
 
 ///#include <iostream>
 #include <fstream>
+#include <time.h> 
 #include <boost/filesystem.hpp>
 //#include "CLI11.hpp"
 #include "spdlog/fmt/fmt.h"
 #include "yijinjing/paged/PageEngine.h"
 #include "yijinjing/utils/json.hpp"
 
+YJJ_NAMESPACE_START
 
+class PstTimeCtrl: public PstBase
+{
+public:
+    PstTimeCtrl(PageEngine* pe, const std::string & stopTimePt) 
+            : engine(pe)
+            , stop_time(stopTimePt)
+            {}
+            
+    void go(){
+        time_t rawtime = 0;
+        ::time (&rawtime);
 
+        struct tm * dt = ::localtime(&rawtime);
+        
+        char buffer[10];
+        strftime(buffer, sizeof(buffer), "%H:%M:%S", dt);
+        
+        if( stop_time.compare(buffer) < 0){
+            fmt::print("Auto stop with stop time {}.\n", stop_time);
+            engine->stop();
+        }        
+    }
+    
+    std::string getName() const { return "TimeCtrl"; }
+    
+private:
+    PageEngine* engine;
+    const std::string stop_time;
+};
+DECLARE_PTR(PstTimeCtrl);
+
+YJJ_NAMESPACE_END
 
 bool ensure_dir_exists(const std::string & path){
 	if (!boost::filesystem::is_directory(path)){
@@ -24,7 +57,8 @@ bool ensure_dir_exists(const std::string & path){
 int main(int argc, char** argv){
 
 	std::string log_folder, journal_folder;
-	int freq = 1;
+    std::string stopTimePt = "";
+	int freq = 1, cpu_id = -1;
 	{
 	    std::string filename = "page_engine.json";
 		if (argc > 1){
@@ -55,20 +89,35 @@ int main(int argc, char** argv){
 				freq = page_engine_j["frequency"].get<int>();
 				if(freq <= 0) freq = 1;
 			}
+
+			if (page_engine_j.find("cpu_id") != page_engine_j.end()) {
+				cpu_id = page_engine_j["cpu_id"].get<int>();
+			}
+            
+            if (page_engine_j.find("stop_time") != page_engine_j.end()) {
+				stopTimePt = page_engine_j["stop_time"].get<std::string>();
+			}
 		}catch(...) {
 			fmt::print(">>> The json file {} must contain {'page_engine': dict(log_folder='', journal_folder='')}.\n");
 			return -1;
 		}
 	}
 
-	fmt::print(">>> PageEngine will run with log_folder {}, journal_folder {}, and frequency {}.\n", log_folder, journal_folder, freq);
+	fmt::print(">>> PageEngine run with log_folder {}, journal_folder {}, frequency {}.\n", log_folder, journal_folder, freq);
 	if(log_folder.size() > 0 && journal_folder.size() > 0 
 		&& ensure_dir_exists(log_folder) && ensure_dir_exists(journal_folder)){
 
 	    yijinjing::PageEngine engine(journal_folder + "/" + "PAGE_ENGINE_COMM", journal_folder + "/" + "TEMP_PAGE", log_folder);
-
-	    engine.set_freq(1);
-	    engine.start();
+        
+        if(stopTimePt.size() > 0){
+        	fmt::print(">>> Add AutoTimeCtrl with stop time {}.\n", stopTimePt);
+        	yijinjing::PstTimeCtrlPtr task_control(new yijinjing::PstTimeCtrl(&engine, stopTimePt));
+        	engine.add_task(task_control);
+    	}
+        
+        
+	    engine.set_freq(freq);
+	    engine.start(cpu_id);
 	}else{
 		fmt::print(">>> Failed to create log_folder {} or journal_folder {}, please check.\n", log_folder, journal_folder);
 		return -1;

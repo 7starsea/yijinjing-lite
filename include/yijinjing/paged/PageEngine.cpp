@@ -29,6 +29,9 @@
 #include  <atomic>
 #include <signal.h>
 #include <functional>
+#if defined __linux__  
+#include <sched.h>
+#endif
 
 USING_YJJ_NAMESPACE
 
@@ -81,6 +84,16 @@ void signal_callback(int signum)
     }
 }
 
+bool cpu_set_affinity(int cpu_id){
+#if defined __linux__  
+    cpu_set_t mask;
+    CPU_ZERO(&mask);
+    CPU_SET(cpu_id, &mask);
+    return sched_setaffinity(0, sizeof(mask), &mask) < 0; 
+#else
+    return false;    
+#endif    
+}
 
 
 void PageEngine::acquire_mutex() 
@@ -135,7 +148,7 @@ PageEngine::~PageEngine()
 
 }
 
-void PageEngine::start()
+void PageEngine::start(int cpu_id)
 {
     spdlog::info("reset socket: {}", PAGED_SOCKET_FILE);
 ///    KF_LOG_INFO(logger, "reset socket: " << PAGED_SOCKET_FILE);
@@ -147,7 +160,7 @@ void PageEngine::start()
     memset(commBuffer, 0, COMM_SIZE);
     // step 1: start commBuffer checking thread
     comm_running = false;
-    commThread = ThreadPtr(new std::thread(std::bind(&PageEngine::start_comm, this)));
+    commThread = ThreadPtr(new std::thread(std::bind(&PageEngine::start_comm, this, cpu_id)));
     // step 2: start socket listening
     socketThread = ThreadPtr(new std::thread(std::bind(&PageEngine::start_socket, this)));
     // make sure buffer / socket are running
@@ -460,8 +473,15 @@ void  PageEngine::exit_client(const string& clientName, int hashCode, bool needH
 }
 
 
-void PageEngine::start_comm()
+void PageEngine::start_comm(int cpu_id)
 {
+    if(cpu_id > 0){
+        if(cpu_set_affinity(cpu_id)){
+            spdlog::info( "set cpu_id {} successfully.", cpu_id);
+        }else{
+            spdlog::info( "set cpu_id {} failed.", cpu_id);
+        }
+    }
     comm_running = true;
     for (size_t idx = 0; comm_running; idx = (idx + 1) % (maxIdx + 1))
     {

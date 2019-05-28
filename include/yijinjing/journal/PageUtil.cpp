@@ -20,6 +20,7 @@
  * for memory access, yjj-format file name, page number, etc.
  */
 
+//#include <iostream>
 #include "PageUtil.h"
 #include "PageHeader.h"
 
@@ -218,6 +219,7 @@ void* PageUtil::LoadPageBuffer(const string& path, int size, bool isWriting, boo
         exit(EXIT_FAILURE);
     }
 
+///    std::cout<<"Path:"<<path <<"addr:"<<buffer<<" isWriting:"<<isWriting<<std::endl;
     close(fd);
     return buffer;
 #endif // _WINDOWS

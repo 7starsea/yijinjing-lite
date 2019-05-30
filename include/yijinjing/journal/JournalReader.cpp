@@ -140,8 +140,8 @@ bool JournalReader::seekTimeJournal(size_t idx, int64_t nano)
 {
     if (idx < journals.size())
     {
-        journals[idx]->seekTime(nano);
-        return true;
+        return journals[idx]->seekTime(nano);
+        /// return true;
     }
     return false;
 }

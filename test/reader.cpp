@@ -28,6 +28,8 @@ int main(){
     std::vector<string> empty;
     JournalReaderPtr reader = yijinjing::JournalReader::create(KUNGFU_JOURNAL_FOLDER, "test", -1, "Client_R");
     
+    bool flag = reader->seekTimeJournalByName("test", 0);
+    std::cout<< "seekTimeJournalByName Return Flag:" << flag <<std::endl;
     getNanoTime();
     
 

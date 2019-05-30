@@ -38,7 +38,7 @@ JournalPtr Journal::create(const string &dir, const string &jname, int serviceId
     return jp;
 }
 
-void Journal::seekTime(int64_t time)
+bool Journal::seekTime(int64_t time)
 {
     // before seek to time, should release current page first
     if (curPage.get() != nullptr)
@@ -66,6 +66,7 @@ void Journal::seekTime(int64_t time)
     // if the page is inited with null, means reader and no journal at all
     // as keep loading next page may cause huge load of page engine, we simply skip this
     expired = (curPage.get() == nullptr);
+    return !expired;
 }
 
 void Journal::loadNextPage()

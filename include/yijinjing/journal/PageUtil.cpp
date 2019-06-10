@@ -77,18 +77,36 @@ short PageUtil::ExtractPageNum(const string &filename, const string &jname)
 
 vector<short> PageUtil::GetPageNums(const string& dir, const string& jname)
 {
-    string namePattern = GetPageFileNamePattern(jname);
+    const string namePattern = GetPageFileNamePattern(jname);
     boost::filesystem::path p(dir);
     boost::regex pattern(namePattern);
     vector<short> res;
     for (auto &file : boost::filesystem::directory_iterator(p)) {
-        string filename = file.path().filename().string();
+        const string filename = file.path().filename().string();
         if (boost::regex_match(filename.begin(), filename.end(), pattern))
             res.push_back(PageUtil::ExtractPageNum(filename, jname));
     }
     std::sort(res.begin(), res.end());
     return res;
 }
+
+void PageUtil::RemoveJournal(const string& dir, const string& jname){
+    const string namePattern = GetPageFileNamePattern(jname);
+    boost::filesystem::path p(dir);
+    boost::regex pattern(namePattern);
+    vector<string> res;
+    for (auto &file : boost::filesystem::directory_iterator(p)) {
+        const string filename = file.path().filename().string();
+        if (boost::regex_match(filename.begin(), filename.end(), pattern))
+            res.push_back(file.path().string());
+    }
+    for(auto & file : res){
+///        printf("removing journal: %s\n", file.c_str());
+        boost::filesystem::remove(file);
+    }
+
+}
+
 
 short PageUtil::GetPageNumWithTime(const string& dir, const string& jname, int64_t time)
 {

@@ -7,6 +7,7 @@
 #include "yijinjing/journal/FrameHeader.h"
 #include "yijinjing/journal/Timer.h"
 #include "yijinjing/journal/PageProvider.h"
+#include "yijinjing/journal/PageUtil.h"
 
 
 #include "stat.h"
@@ -26,6 +27,10 @@ int main(int argc, char *argv[]){
         cpu_set_affinity(cpu_id_);
 
     getNanoTime();
+    
+   // PageUtil::RemoveJournal(KUNGFU_JOURNAL_FOLDER, "test");
+   // return 0;
+    
     JournalWriterPtr writer_ = yijinjing::JournalWriter::create(KUNGFU_JOURNAL_FOLDER, "test", "Client");
 
 

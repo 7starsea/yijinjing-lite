@@ -63,6 +63,7 @@ public:
     static short  GetPageNumWithTime(const string& dir, const string& jname, int64_t time);
     /** get existing page numbers in directory with jname */
     static vector<short> GetPageNums(const string& dir, const string& jname);
+    static void RemoveJournal(const string& dir, const string& jname);
 
     // header
     /** get header from necessary information */

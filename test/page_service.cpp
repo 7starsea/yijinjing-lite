@@ -116,7 +116,7 @@ int main(int argc, char** argv){
     	}
         
         
-	    engine.set_freq(freq);
+	    engine.set_task_freq(freq);
 	    engine.start(cpu_id);
 	}else{
 		fmt::print(">>> Failed to create log_folder {} or journal_folder {}, please check.\n", log_folder, journal_folder);

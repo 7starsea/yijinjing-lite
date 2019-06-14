@@ -108,7 +108,7 @@ void PageEngine::release_mutex()
 
 PageEngine::PageEngine(const string & commFileName,  const std::string & temp_page_file, const std::string & logger_path):
     commBuffer(nullptr), commFile(commFileName),  maxIdx(0),
-                          microsecFreq(INTERVAL_IN_MILLISEC),
+                          taskFreq(INTERVAL_IN_MILLISEC), commFreq(500),
                           comm_running(false)
                           , task_temppage(new PstTempPage(this, temp_page_file))
 {
@@ -169,16 +169,21 @@ void PageEngine::start(int cpu_id)
         usleep(INTERVAL_IN_MILLISEC / 10);
     }
 
-    if (microsecFreq <= 0)
+    if (taskFreq <= 0)
         throw std::runtime_error("unaccepted task time interval");
 
     start_task();
 }
 
-void PageEngine::set_freq(double secondFreq)
+void PageEngine::set_task_freq(double secondFreq)
 {
-    microsecFreq = (int)(secondFreq * MICROSECONDS_PER_SECOND);
-    spdlog::info("microsecond frequency updated to {}" , microsecFreq);
+    taskFreq = (int)(secondFreq * MICROSECONDS_PER_SECOND);
+    spdlog::info("task frequency updated to {} microsecond" , taskFreq);
+}
+
+void PageEngine::set_comm_freq(double secondFreq){
+    commFreq = (int)(secondFreq * MICROSECONDS_PER_SECOND);
+    spdlog::info("comm frequency updated to {} microsecond" , commFreq);   
 }
 
 void PageEngine::stop()
@@ -212,7 +217,7 @@ void PageEngine::stop_all()
 
 void PageEngine::start_task()
 {
-    spdlog::info( "(startTasks) (microseconds) {}" , microsecFreq);
+    spdlog::info( "(startTasks) (microseconds) {}" , taskFreq);
     while (is_task_running.load(std::memory_order_relaxed))
     {
         acquire_mutex();        
@@ -221,7 +226,7 @@ void PageEngine::start_task()
             item.second->go();
         }
         release_mutex();
-        usleep(microsecFreq);
+        usleep(taskFreq);
     }
     spdlog::info( "(stopTask) done");
     stop_all();
@@ -482,6 +487,9 @@ void PageEngine::start_comm(int cpu_id)
             spdlog::info( "set cpu_id {} failed.", cpu_id);
         }
     }
+
+    const int comm_freq = commFreq;
+    spdlog::info( "(startTasks) (microseconds) {}" , comm_freq);
     comm_running = true;
     for (size_t idx = 0; comm_running; idx = (idx + 1) % (maxIdx + 1))
     {
@@ -502,6 +510,7 @@ void PageEngine::start_comm(int cpu_id)
             msg->last_page_num = msg->page_num;
             release_mutex();
         }
+        usleep(comm_freq);
     }
 }
 

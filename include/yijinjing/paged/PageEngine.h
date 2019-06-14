@@ -103,7 +103,9 @@ public:
     void stop();
 
     /** set task frequency in seconds, default 1 second */
-    void set_freq(double second_interval);
+    void set_task_freq(double second_interval);
+    /** set task frequency in seconds, default 1/2000 second */
+    void set_comm_freq(double second_interval);
     /** return true if this task is inserted the first time, false if exits and updated */
     bool add_task(const PstBasePtr & task);
     /** return true if exits and removed */
@@ -126,7 +128,8 @@ private:
     string  commFile;   /**< comm file linked to memory */
 
     size_t  maxIdx;     /**< max index of current assigned comm block */
-    int     microsecFreq;  /**< task frequency in microseconds */
+    int     taskFreq;  /**< task frequency in microseconds */
+    int     commFreq;  /**< comm frequency in microseconds */
     volatile bool    comm_running;  /**< comm buffer checking thread is running */
 
     PstTempPagePtr task_temppage;
